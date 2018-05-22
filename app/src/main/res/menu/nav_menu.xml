@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/nav_login"
+            android:title="login"/>
+        <item
+            android:id="@+id/nav_2"
+            android:title="2"/>
+        <item
+            android:id="@+id/nav_3"
+            android:title="3"/>
+        <item
+            android:id="@+id/nav_4"
+            android:title="4"/>
+    </group>
+</menu>
