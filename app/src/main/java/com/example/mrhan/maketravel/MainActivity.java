@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v){
                 Snackbar.make(v,"floating button work",Snackbar.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this , travel_tab.class);
+                Intent intent = new Intent(MainActivity.this , Selectcity.class);
                 startActivity(intent);
             }
         });

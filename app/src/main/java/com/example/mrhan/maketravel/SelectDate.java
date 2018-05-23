@@ -1,6 +1,8 @@
 package com.example.mrhan.maketravel;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,10 +16,14 @@ import java.util.Calendar;
 public class SelectDate extends AppCompatActivity {
     Button date_go_btn, date_back_btn;
     Calendar calendar_go,calendar_back;
+    String cityname;
+    private FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_date);
+        cityname = getIntent().getStringExtra("cityname");
+        System.out.println(cityname);
         calendar_go = Calendar.getInstance();
         calendar_back = Calendar.getInstance();
         date_go_btn = (Button) findViewById(R.id.date_go_button);
@@ -52,6 +58,16 @@ public class SelectDate extends AppCompatActivity {
                     }
                 }, calendar_back.get(Calendar.YEAR), calendar_back.get(Calendar.MONTH), calendar_back.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
+            }
+        });
+
+        fab = (FloatingActionButton)findViewById(R.id.Dateselect_done_bt);
+        fab.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Snackbar.make(v,"floating button work",Snackbar.LENGTH_SHORT).show();
+                Intent intent = new Intent(SelectDate.this , travel_tab.class);
+                startActivity(intent);
             }
         });
     }

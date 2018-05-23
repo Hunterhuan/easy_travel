@@ -21,7 +21,9 @@
         <activity android:name=".Selectcity" />
         <activity android:name=".Login" />
         <activity android:name=".SelectDate" />
-        <activity android:name=".travel_tab"></activity>
+        <activity android:name=".travel_tab" />
+        <activity android:name=".spots_detail" />
+        <activity android:name=".result"></activity>
     </application>
 
 </manifest>

@@ -10,4 +10,11 @@
         android:padding="10dp"
         android:text="City Name"
         android:textSize="35dp"/>
+    <View
+        android:id="@+id/view_card_main3_lines"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/hotel_detail"
+        android:layout_marginTop="@dimen/card_title_margin"
+        android:background="@color/gray_light" />
 </LinearLayout>

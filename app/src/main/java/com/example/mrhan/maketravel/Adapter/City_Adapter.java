@@ -1,6 +1,7 @@
 package com.example.mrhan.maketravel.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mrhan.maketravel.R;
+import com.example.mrhan.maketravel.SelectDate;
+import com.example.mrhan.maketravel.Selectcity;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +36,10 @@ public class City_Adapter extends RecyclerView.Adapter<City_Adapter.MyHolder>{
             public void onClick(View v){
                 int position = myHolder.getAdapterPosition();
                 String tmp = citys.get(position);
-                Toast.makeText(v.getContext(),"you click view "+tmp,Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(), SelectDate.class);
+                intent.putExtra("cityname",tmp);
+                v.getContext().startActivity(intent);
+                //Toast.makeText(v.getContext(),"you click view "+tmp,Toast.LENGTH_SHORT).show();
             }
         });
         return myHolder;
