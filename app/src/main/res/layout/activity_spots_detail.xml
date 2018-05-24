@@ -29,6 +29,7 @@
             >
 
             <com.flaviofaria.kenburnsview.KenBurnsView
+                android:id="@+id/spot_img_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
@@ -63,13 +64,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans-serif"
-                android:text="Story"
+                android:text="基本信息"
                 android:textColor="#3A3A3A"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 />
 
             <TextView
+                android:id="@+id/spot_name_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
@@ -84,13 +86,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans-serif"
-                android:text="Development"
+                android:text="简介"
                 android:textColor="#3A3A3A"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 />
 
             <TextView
+                android:id="@+id/spot_intro_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"

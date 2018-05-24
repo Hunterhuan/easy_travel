@@ -9,6 +9,8 @@ package com.example.mrhan.maketravel.Adapter;
         import android.widget.TextView;
         import android.widget.Toast;
 
+        import com.example.mrhan.maketravel.MainActivity;
+        import com.example.mrhan.maketravel.MyAlgorithm;
         import com.example.mrhan.maketravel.R;
 
         import java.util.Collections;
@@ -49,14 +51,18 @@ public class hotels_Adapter extends RecyclerView.Adapter<hotels_Adapter.MyHolder
     public void onBindViewHolder(MyHolder myHolder, int position){
         String p=citys.get(position);
         myHolder.city.setText(p);
-        Glide.with(mcontext).load(R.drawable.material_design_11).apply(new RequestOptions().fitCenter()).into(myHolder.image);
+        myHolder.city_adress.setText(MainActivity.tst.db.getAddr(p));
+        String imgurl = MainActivity.tst.db.getImage(p);
+        System.out.println(imgurl);
+
+        Glide.with(mcontext).load(imgurl).apply(new RequestOptions().fitCenter()).into(myHolder.image);
     }
     @Override
     public int getItemCount(){
         return citys.size();
     }
     class MyHolder extends RecyclerView.ViewHolder{
-        TextView city;
+        TextView city,city_adress;
         ImageView image;
         View cityview;
 
@@ -64,6 +70,7 @@ public class hotels_Adapter extends RecyclerView.Adapter<hotels_Adapter.MyHolder
             super(itemView);
             cityview=itemView;
             city = (TextView)itemView.findViewById(R.id.hotel_name);
+            city_adress = (TextView)itemView.findViewById(R.id.hotel_detail);
             image = (ImageView)itemView.findViewById(R.id.hotel_img);
         }
     }
