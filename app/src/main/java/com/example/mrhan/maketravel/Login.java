@@ -1,5 +1,6 @@
 package com.example.mrhan.maketravel;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
@@ -44,7 +45,13 @@ public class Login extends AppCompatActivity {
                 String str_user=edit_user.getText().toString();
                 String str_password=edit_password.getText().toString();
                 Snackbar.make(v ,str_user ,Snackbar.LENGTH_SHORT).show();
-
+            }
+        });
+        reg_btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(Login.this , Registe.class);
+                startActivity(intent);
             }
         });
     }
