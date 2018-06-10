@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.nav_login:
-                Snackbar.make(mDrawerLayout,"1",Snackbar.LENGTH_SHORT).show();
                 Intent intent = new Intent(this,Login.class);
                 startActivity(intent);
                 break;
             case R.id.nav_2:
-                Snackbar.make(mDrawerLayout,"2",Snackbar.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(this,person_page.class);
+                startActivity(intent2);
                 break;
             case R.id.nav_3:
                 Snackbar.make(mDrawerLayout,"3",Snackbar.LENGTH_SHORT).show();

@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 
 public class TravelDB {
-    private static String urlString = "http://192.168.1.117:8000/api";
+    private static String urlString = "http://118.25.77.165:8080/api";
     //    private static String urlString = "http://192.168.43.92:8000/api";
     private String CityID;
     private JSONObject cachedData;

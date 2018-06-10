@@ -25,6 +25,9 @@ import com.example.mrhan.maketravel.MainActivity;
 import com.example.mrhan.maketravel.MyAlgorithm;
 import com.example.mrhan.maketravel.R;
 import com.example.mrhan.maketravel.travel_tab;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +42,26 @@ public class fragment_spots extends Fragment implements View.OnClickListener, Vi
 
 
     RecyclerView rv;
+    RefreshLayout refreshLayout;
     //private SwipeRefreshLayout swipeRefresh;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         NestedScrollView nestedScrollView = (NestedScrollView) inflater.inflate(R.layout.fragment_spots, container, false);
         rv = (RecyclerView) nestedScrollView.findViewById(R.id.recycler_spot);
+        refreshLayout =(RefreshLayout)nestedScrollView.findViewById(R.id.spot_refreshlayout);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
 
+                refreshLayout.finishRefresh(2000);
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore(2000);
+            }
+        });
 /*        swipeRefresh = (SwipeRefreshLayout)nestedScrollView.findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

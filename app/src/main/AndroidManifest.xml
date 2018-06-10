@@ -26,7 +26,8 @@
         <activity android:name=".travel_tab" />
         <activity android:name=".spots_detail" />
         <activity android:name=".result" />
-        <activity android:name=".Registe"></activity>
+        <activity android:name=".Registe" />
+        <activity android:name=".person_page"></activity>
     </application>
 
 </manifest>

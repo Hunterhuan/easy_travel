@@ -22,6 +22,9 @@ import com.example.mrhan.maketravel.MainActivity;
 import com.example.mrhan.maketravel.MyAlgorithm;
 import com.example.mrhan.maketravel.R;
 import com.example.mrhan.maketravel.travel_tab;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +36,25 @@ import java.util.List;
 public class fragment_hotels extends Fragment implements View.OnClickListener, View.OnTouchListener{
 
     RecyclerView rv;
-
+    RefreshLayout refreshLayout;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         NestedScrollView nestedScrollView = (NestedScrollView) inflater.inflate(R.layout.fragment_hotels, container, false);
         rv = (RecyclerView) nestedScrollView.findViewById(R.id.recycler_hotel);
+        refreshLayout =(RefreshLayout)nestedScrollView.findViewById(R.id.hotel_refreshlayout);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+
+                refreshLayout.finishRefresh(2000);
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore(2000);
+            }
+        });
         return nestedScrollView;
     }
     @Override
