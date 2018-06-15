@@ -291,7 +291,15 @@ public class TravelDB {
         }
         return time*60;
     }
-
+    public Boolean setVisitTime(String sceneId,Integer time){
+        try {
+            JSONArray sceneInfo = cachedData.getJSONObject("SceneInfoList").getJSONArray(sceneId);
+            sceneInfo.put(9,time/60);
+            return true;
+        } catch (Exception ex){
+            return false;
+        }
+    }
     private JSONObject HttpGet(String urlStr){
         AsyncTask<String,Integer,JSONObject> task = new AsyncTask<String, Integer, JSONObject>() {
             @Override
