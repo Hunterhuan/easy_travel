@@ -2,6 +2,7 @@ package com.example.mrhan.maketravel.Fragment;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,19 +19,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.mrhan.maketravel.Adapter.City_Adapter;
 import com.example.mrhan.maketravel.Adapter.spots_Adapter;
+import com.example.mrhan.maketravel.Adapter.test_spots_adapter;
 import com.example.mrhan.maketravel.MainActivity;
 import com.example.mrhan.maketravel.MyAlgorithm;
 import com.example.mrhan.maketravel.R;
+import com.example.mrhan.maketravel.spots_detail;
 import com.example.mrhan.maketravel.travel_tab;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.mrhan.maketravel.MainActivity.tst;
 
@@ -43,33 +51,35 @@ public class fragment_spots extends Fragment implements View.OnClickListener, Vi
 
     RecyclerView rv;
     RefreshLayout refreshLayout;
+    private test_spots_adapter mAdapter;
+    private List<String> spots_name;
+    private Map<String,Boolean> map;
     //private SwipeRefreshLayout swipeRefresh;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         NestedScrollView nestedScrollView = (NestedScrollView) inflater.inflate(R.layout.fragment_spots, container, false);
         rv = (RecyclerView) nestedScrollView.findViewById(R.id.recycler_spot);
+
+        map = new HashMap<String, Boolean>();
+
         refreshLayout =(RefreshLayout)nestedScrollView.findViewById(R.id.spot_refreshlayout);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-
                 refreshLayout.finishRefresh(2000);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                refreshLayout.finishLoadMore(2000);
+                List<String> tmp = tst.getRecommandScene();
+                mAdapter.addData(tmp);
+                for(String obj:tmp){
+                    map.put(obj,false);
+                }
+                refreshLayout.finishLoadMore(0);
             }
         });
-/*        swipeRefresh = (SwipeRefreshLayout)nestedScrollView.findViewById(R.id.swipe_refresh);
-        swipeRefresh.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-            }
-        });*/
         return nestedScrollView;
     }
 
@@ -83,39 +93,45 @@ public class fragment_spots extends Fragment implements View.OnClickListener, Vi
         rv.setLayoutManager(new LinearLayoutManager(rv.getContext()));
 
 
-
-
-
-
-/*        AsyncTask<MyAlgorithm, Integer, List<String> > asyncTask = new AsyncTask<MyAlgorithm, Integer, List<String> >() {
-
-            @Override
-            protected List<String> doInBackground(MyAlgorithm[] params) {//此函数是在任务被线程池执行时调用 运行在子线程中，在此处理比较耗时的操作 比如执行下载
-                MyAlgorithm tst = params[0];
-                List<String> result = tst.getRecommandScene();
-
-                return result;
-            }
-        };
-
-        List<String> result;
-        try {
-            result = asyncTask.execute(tst).get();
-            result.add("lajilaji");
-            System.out.println(result);
-        } catch (Exception ex){
-            ex.printStackTrace();
-            result = new ArrayList<>();
-            result.add("laji");
-        }*/
-
-
-        List<String> spots_name= new ArrayList<>();
+        spots_name= new ArrayList<>();
         List<String> result = tst.getRecommandScene();
         //System.out.println(spots_name);
         for(String obj : result){
             spots_name.add(obj);
+            map.put(obj,false);
         }
+
+        mAdapter = new test_spots_adapter(R.layout.spot_cardview, spots_name);
+        rv.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                String tmp = mAdapter.getData().get(position);
+                Intent intent = new Intent(view.getContext(),spots_detail.class);
+                intent.putExtra("String_data",tmp);
+                view.getContext().startActivity(intent);
+            }
+        });
+        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                String tmp = mAdapter.getData().get(position);
+                ImageView img = (ImageView)adapter.getViewByPosition(rv, position, R.id.img_favorite);
+                if(map.get(tmp)==false){
+                    img.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    MainActivity.tst.addScene(tmp);
+                    map.put(tmp,true);
+                    Toast.makeText(view.getContext(), "你添加了景点：" + tmp, Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    MainActivity.tst.removeScene(tmp);
+                    map.put(tmp,false);
+                    Toast.makeText(view.getContext(), "你移除了景点：" + tmp, Toast.LENGTH_SHORT).show();
+                    img.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                }
+
+            }
+        });
 /*        tst.addScene("外滩");
         tst.addScene("上海杜莎夫人蜡像馆(南京西路)");
         tst.removeScene("外滩");
@@ -123,7 +139,7 @@ public class fragment_spots extends Fragment implements View.OnClickListener, Vi
         tst.addScene("上海城隍庙");
         tst.addScene("外滩");*/
 
-        rv.setAdapter(new spots_Adapter(rv.getContext(),spots_name));
+        //rv.setAdapter(mAdapter = new spots_Adapter(rv.getContext(),spots_name));
 
     }
     @Override

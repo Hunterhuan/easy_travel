@@ -27,7 +27,8 @@
         <activity android:name=".spots_detail" />
         <activity android:name=".result" />
         <activity android:name=".Registe" />
-        <activity android:name=".person_page"></activity>
+        <activity android:name=".person_page" />
+        <activity android:name=".Edit_person_info"></activity>
     </application>
 
 </manifest>

@@ -143,7 +143,7 @@ public class MyAlgorithm {
 
             refresh = false;
         }
-        /*
+
         //根据景点评分表给出推荐
         Iterator<Map.Entry<String, Double>> it = sceneScore.iterator();
         while(it.hasNext() && (top_scene.size()<top_number || (!chosenScene.isEmpty() && neighbor_scene.size()<neighbor_number)))
@@ -174,9 +174,8 @@ public class MyAlgorithm {
                 it.remove();
             }
         }
-        */
-        Iterator<Map.Entry<String, Double>> it3 = sceneScore.iterator();
-        while(it3.hasNext()) {top_scene.add(it3.next().getKey());}
+        //Iterator<Map.Entry<String, Double>> it3 = sceneScore.iterator();
+        //while(it3.hasNext()) {top_scene.add(it3.next().getKey());}
         return top_scene;
     }
 
@@ -445,11 +444,14 @@ public class MyAlgorithm {
     }
 
     //ids 0 总天数， 1 总费用, 2 交通方式 其余各景点Id
-    public List<String> get_route_in_line(List<String> ids)
+    public ArrayList<ArrayList<String>> get_route_in_line(List<String> ids)
     {
         double lunch_time = 5400;
-        List<String> res = new ArrayList<String>();
-        List<String> formap; //暂时没用，为了显示地图可能有用
+        ArrayList<ArrayList<String>> finalres= new ArrayList<ArrayList<String>>();
+        //文字流程
+        ArrayList<String>res = new ArrayList<String>();
+        //图片流程
+        ArrayList<String> formap = new ArrayList<String>(); //暂时没用，为了显示地图可能有用
 
         int now_day = 1;
         double today_time = 0.0;
@@ -460,10 +462,14 @@ public class MyAlgorithm {
             //新的一天开始
             if(today_time == 0)
             {
+                formap.add("Day"+now_day);
+                formap.add(hotelID);
+                formap.add(ids.get(j+3));
+
                 res.add("Day"+now_day);
                 double tmp = db.getDistance(hotelID,ids.get(j+3), ids.get(2));
                 String trans = transportation.equals("taxi")?"乘出租车":"乘公交车";
-                if(tmp<240) {tmp*=5; trans="步行";}
+                if(tmp<240) {tmp*=15; trans="步行";}
                 res.add("从"+hotelID+"出发,"+ trans + "前往"+ids.get(j+3)+",历时"+get_time_duration(tmp) + "    "
                         +get_clock(today_time) + "——" + get_clock(today_time += tmp));
 
@@ -473,12 +479,14 @@ public class MyAlgorithm {
                 need_lunch = true;
                 continue;
             }
-            System.out.println(today_time);
+            //System.out.println(today_time);
 
+
+            formap.add(ids.get(j+3));
 
             double tmp = db.getDistance(ids.get(j+2),ids.get(j+3), ids.get(2));
             String trans = transportation.equals("taxi")?"乘出租车":"乘公交车";
-            if(tmp<240) {tmp*=5; trans="步行";}
+            if(tmp<240) {tmp*=15; trans="步行";}
 
             //检测是否到午饭时间
             if(need_lunch && today_time > 10800) //10800s = 3h = 11:00后吃饭
@@ -510,7 +518,8 @@ public class MyAlgorithm {
 
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
                 String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
-                if(tmp<240) {tmp*=5; trans1="步行";}
+                if(tmp<240) {tmp*=15; trans1="步行";}
+                formap.add(hotelID);
                 res.add("从"+ids.get(j+3)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
                         +get_clock(today_time) + "——" + get_clock(today_time += tmp1));
 
@@ -519,7 +528,9 @@ public class MyAlgorithm {
             }
         }
         res.add("结束本次旅行");
-        return res;
+        finalres.add(res);
+        finalres.add(formap);
+        return finalres;
 
     }
 

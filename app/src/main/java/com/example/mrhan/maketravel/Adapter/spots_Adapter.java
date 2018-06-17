@@ -17,6 +17,7 @@ import com.example.mrhan.maketravel.MainActivity;
 import com.example.mrhan.maketravel.MyAlgorithm;
 import com.example.mrhan.maketravel.R;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -123,5 +124,13 @@ public class spots_Adapter extends RecyclerView.Adapter<spots_Adapter.MyHolder>{
             image = (ImageView)itemView.findViewById(R.id.img_spot);
             fav_bt = (ImageView)itemView.findViewById(R.id.img_favorite);
         }
+    }
+
+    public spots_Adapter loadMore(Collection<String> collection){
+        if(collection.size()==0)
+            return this;
+        citys.addAll(collection);
+        notifyDataSetChanged();
+        return this;
     }
 }
