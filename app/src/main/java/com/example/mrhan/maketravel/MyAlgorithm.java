@@ -208,8 +208,8 @@ public class MyAlgorithm {
             Iterator<Map.Entry<String, Double>> it1 = sceneScore.iterator();
             while(top_scene.size()<4 && it1.hasNext())
             {
-                top_scene.add(it.next().getKey());
-                it.remove();
+                top_scene.add(it1.next().getKey());
+                it1.remove();
             }
         }
         //生成推荐列表
@@ -480,6 +480,7 @@ public class MyAlgorithm {
         return res;
     }
 
+
     //ids 0 总天数， 1 总费用, 2 交通方式 其余各景点Id
     public ArrayList<ArrayList<String>> get_route_in_line(List<String> ids)
     {
@@ -506,7 +507,7 @@ public class MyAlgorithm {
                 res.add("Day"+now_day);
                 double tmp = db.getDistance(hotelID,ids.get(j+3), ids.get(2));
                 String trans = transportation.equals("taxi")?"乘出租车":"乘公交车";
-                if(tmp<240) {tmp*=15; trans="步行";}
+                if(tmp<240) {tmp*=5; trans="步行";}
                 res.add("从"+hotelID+"出发,"+ trans + "前往"+ids.get(j+3)+",历时"+get_time_duration(tmp) + "    "
                         +get_clock(today_time) + "——" + get_clock(today_time += tmp));
 
@@ -519,14 +520,29 @@ public class MyAlgorithm {
             //System.out.println(today_time);
 
 
+            //该天结束
+            if(today_time > 32400) //32400s = 9h = 17:00
+            {
+
+                double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
+                String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
+                if(tmp1<240) {tmp1*=5; trans1="步行";}
+                formap.add(hotelID);
+                res.add("从"+ids.get(j+3)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
+                        +get_clock(today_time) + "——" + get_clock(today_time += tmp1));
+
+                today_time = 0;
+                now_day += 1;
+            }
+
             formap.add(ids.get(j+3));
 
             double tmp = db.getDistance(ids.get(j+2),ids.get(j+3), ids.get(2));
             String trans = transportation.equals("taxi")?"乘出租车":"乘公交车";
-            if(tmp<240) {tmp*=15; trans="步行";}
+            if(tmp<240) {tmp*=5; trans="步行";}
 
             //检测是否到午饭时间
-            if(need_lunch && today_time > 10800) //10800s = 3h = 11:00后吃饭
+            if(need_lunch && today_time > 10800 && today_time < 18000) //10800s = 3h = 11:00后吃饭
             {
                 res.add("建议午餐时间,历时"+get_time_duration(5400.0)+"    "+get_clock(today_time) + "——" + get_clock(today_time  += lunch_time));
                 need_lunch = false;
@@ -535,7 +551,7 @@ public class MyAlgorithm {
                     +get_clock(today_time) + "——" + get_clock(today_time += tmp));
 
             //检测是否到午饭时间
-            if(need_lunch && today_time > 10800) //10800s = 3h = 11:00后吃饭
+            if(need_lunch && today_time > 10800 && today_time < 18000) //10800s = 3h = 11:00后吃饭
             {
                 res.add("建议午餐时间,历时"+get_time_duration(5400.0)+"    "+get_clock(today_time) + "——" + get_clock(today_time  += lunch_time));
                 need_lunch = false;
@@ -543,7 +559,7 @@ public class MyAlgorithm {
             res.add( "游览" + ids.get(j+3) + ",历时"+get_time_duration(db.getVisitTime(ids.get(j+3)))+"    "
                     +get_clock(today_time) + "——" + get_clock(today_time+= db.getVisitTime(ids.get(j+3))));
             //检测是否到午饭时间
-            if(need_lunch && today_time > 10800) //10800s = 3h = 11:00后吃饭
+            if(need_lunch && today_time > 10800 & today_time < 18000) //10800s = 3h = 11:00后吃饭
             {
                 res.add("建议午餐时间,历时"+get_time_duration(5400.0)+"    "+get_clock(today_time) + "——" + get_clock(today_time  += lunch_time));
                 need_lunch = false;
@@ -555,7 +571,7 @@ public class MyAlgorithm {
 
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
                 String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
-                if(tmp<240) {tmp*=15; trans1="步行";}
+                if(tmp1<240) {tmp1*=5; trans1="步行";}
                 formap.add(hotelID);
                 res.add("从"+ids.get(j+3)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
                         +get_clock(today_time) + "——" + get_clock(today_time += tmp1));

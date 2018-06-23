@@ -2,6 +2,7 @@ package com.example.mrhan.maketravel.Fragment;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -55,11 +58,45 @@ public class fragment_spots extends Fragment implements View.OnClickListener, Vi
     private test_spots_adapter mAdapter;
     private List<String> spots_name;
     private Map<String,Boolean> map;
+    private Button interest_bt, transportation_bt;
+    String[] interesting = {"人文","自然"};
+    String[] transportation={"驾车","公交","智能选择"};
+    boolean[] checkedItems ={true,true};
+    int itemSelected = 0;
     //private SwipeRefreshLayout swipeRefresh;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         CoordinatorLayout nestedScrollView = (CoordinatorLayout) inflater.inflate(R.layout.fragment_spots, container, false);
         rv = (RecyclerView) nestedScrollView.findViewById(R.id.recycler_spot);
+        interest_bt = (Button)nestedScrollView.findViewById(R.id.interest_bt);
+        transportation_bt = (Button)nestedScrollView.findViewById(R.id.transportation_bt);
+
+        interest_bt.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                new AlertDialog.Builder(getContext())
+                        .setTitle("选择你的景点喜好")
+                        .setMultiChoiceItems(interesting,checkedItems,null)
+                        .setPositiveButton("ok",null)
+                        .setNegativeButton("cancle",null)
+                        .show();
+            }
+        });
+        transportation_bt.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                new AlertDialog.Builder(getContext())
+                        .setTitle("选择你的交通工具")
+                        .setSingleChoiceItems(transportation, itemSelected, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .setNegativeButton("cancle",null)
+                        .show();
+            }
+        });
         //rv.setNestedScrollingEnabled(false);
 
         map = new HashMap<String, Boolean>();
