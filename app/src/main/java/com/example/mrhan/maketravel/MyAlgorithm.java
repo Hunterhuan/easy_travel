@@ -42,6 +42,7 @@ public class MyAlgorithm {
         transportation = trans;
     }
 
+
     //将一个景点加入已有景点列表
     public void addScene(String ID)
     {
@@ -94,6 +95,8 @@ public class MyAlgorithm {
     }
 
     //返回推荐列表
+    //是否首次创建，用于避免景点重复
+    boolean the_first = true;
     public List<String> getRecommandScene()
     {
         //兴趣因子
@@ -116,32 +119,67 @@ public class MyAlgorithm {
             //暂存ID-评分键值对
             Map<String, Double> tmp = new HashMap<String, Double>();
             //所有景点的List
-            Iterator<String> it1 = all_scene.iterator();
-            while(it1.hasNext())
+            if(the_first == false)
             {
-                String now_ID = it1.next();
-                //已经被选中
-                if(chosenScene.contains(now_ID)) continue;
+                Iterator<Map.Entry<String, Double>> it1 = sceneScore.iterator();
+                while(it1.hasNext())
+                {
+                    String now_ID = it1.next().getKey();
+                    //已经被选中
+                    if(chosenScene.contains(now_ID)) continue;
 
-                //Pop评分
-                Double score = db.getPop(now_ID);
-                //兴趣评分
-                if(interests.contains(db.getType(now_ID))) score += interests_parameter;
-                //重复程度评分
-                Integer same_kind_scene = kindNumber.get(db.getType(now_ID));
-                same_kind_scene = same_kind_scene==null?0:same_kind_scene;
-                score -= repeat_parameter*((double)same_kind_scene);
+                    //Pop评分
+                    Double score = db.getPop(now_ID);
+                    //兴趣评分
+                    if(interests.contains(db.getType(now_ID))) score += interests_parameter;
+                    //重复程度评分
+                    Integer same_kind_scene = kindNumber.get(db.getType(now_ID));
+                    same_kind_scene = same_kind_scene==null?0:same_kind_scene;
+                    score -= repeat_parameter*((double)same_kind_scene);
 
-                //加入键值对
-                tmp.put(now_ID, score);
+                    //加入键值对
+                    tmp.put(now_ID, score);
+                }
+                sceneScore = new ArrayList(tmp.entrySet());
+                Collections.sort(sceneScore, new Comparator<Map.Entry<String, Double>>() {
+                    public int compare(Map.Entry<String,Double> o1, Map.Entry<String,Double> o2) {
+                        return (o2.getValue()>o1.getValue())?1:-1;
+                    } } );
+
+                refresh = false;
             }
-            sceneScore = new ArrayList(tmp.entrySet());
-            Collections.sort(sceneScore, new Comparator<Map.Entry<String, Double>>() {
-                public int compare(Map.Entry<String,Double> o1, Map.Entry<String,Double> o2) {
-                    return (o2.getValue()>o1.getValue())?1:-1;
-                } } );
+            else
+            {
 
-            refresh = false;
+                Iterator<String> it1 = all_scene.iterator();
+                while(it1.hasNext())
+                {
+                    String now_ID = it1.next();
+                    //已经被选中
+                    if(chosenScene.contains(now_ID)) continue;
+
+                    //Pop评分
+                    Double score = db.getPop(now_ID);
+                    //兴趣评分
+                    if(interests.contains(db.getType(now_ID))) score += interests_parameter;
+                    //重复程度评分
+                    Integer same_kind_scene = kindNumber.get(db.getType(now_ID));
+                    same_kind_scene = same_kind_scene==null?0:same_kind_scene;
+                    score -= repeat_parameter*((double)same_kind_scene);
+
+                    //加入键值对
+                    tmp.put(now_ID, score);
+                }
+                sceneScore = new ArrayList(tmp.entrySet());
+                Collections.sort(sceneScore, new Comparator<Map.Entry<String, Double>>() {
+                    public int compare(Map.Entry<String,Double> o1, Map.Entry<String,Double> o2) {
+                        return (o2.getValue()>o1.getValue())?1:-1;
+                    } } );
+
+                refresh = false;
+                the_first = false;
+
+            }
         }
 
         //根据景点评分表给出推荐
@@ -163,19 +201,18 @@ public class MyAlgorithm {
             }
         }
 
-        //生成推荐列表
+        //不足4个
         top_scene.addAll(neighbor_scene);
-        if(top_scene.size()<4)
+        if(top_scene.size() < 4)
         {
-            Iterator<Map.Entry<String, Double>> it2 = sceneScore.iterator();
-            while(it2.hasNext() && top_scene.size()<4)
+            Iterator<Map.Entry<String, Double>> it1 = sceneScore.iterator();
+            while(top_scene.size()<4 && it1.hasNext())
             {
                 top_scene.add(it.next().getKey());
                 it.remove();
             }
         }
-        //Iterator<Map.Entry<String, Double>> it3 = sceneScore.iterator();
-        //while(it3.hasNext()) {top_scene.add(it3.next().getKey());}
+        //生成推荐列表
         return top_scene;
     }
 

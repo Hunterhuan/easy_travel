@@ -18,7 +18,6 @@ public class Registe extends AppCompatActivity {
     Button reg_btn;
     EditText reg_user,reg_password;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

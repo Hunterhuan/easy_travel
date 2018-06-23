@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    tools:context="com.example.mrhan.maketravel.result">
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        >
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <com.baoyachi.stepview.VerticalStepView
-            android:id="@+id/step_view"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="vertical setpview"
-            />
+            android:background="@color/colorPrimary"
+            >
 
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+            <com.baoyachi.stepview.VerticalStepView
+                android:id="@+id/step_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="vertical setpview"
+                />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/to_map_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="30dp"
+        app:borderWidth="2dp"
+        app:elevation="8dp"
+        app:fabSize="normal"
+        app:rippleColor="#222"
+        tools:layout_editor_absoluteX="300dp"
+        tools:layout_editor_absoluteY="463dp" />
+</android.support.design.widget.CoordinatorLayout>
