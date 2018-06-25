@@ -145,6 +145,7 @@ public class UserManager {
             String data = httpUtil.getRequestData(user_info,"utf-8").toString();
             JSONObject result = httpUtil.HttpPost(user_info_url,data);
             if(result.getBoolean("Status")) {
+                online = false;
                 return true;
             }
             else{
