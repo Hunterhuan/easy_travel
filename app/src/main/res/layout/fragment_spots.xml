@@ -1,4 +1,4 @@
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,22 +7,56 @@
     tools:context="com.example.mrhan.maketravel.Fragment.fragment_spots">
 
     <!-- TODO: Update blank fragment layout -->
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/spot_refreshlayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    style="?android:textAppearanceMedium"
+                    android:id="@+id/interest_bt"
+                    android:layout_width="fill_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="@color/colorAccent"
+                    android:padding="16dp"
+                    android:text="兴趣类型"
+                    android:textColor="#FFF"
+                    android:textStyle="bold"/>
+                <Button
+                    style="?android:textAppearanceMedium"
+                    android:id="@+id/transportation_bt"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_weight="1"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="@color/colorAccent"
+                    android:padding="16dp"
+                    android:text="交通方式"
+                    android:textColor="#FFF"
+                    android:textStyle="bold"/>
+            </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_spot"
+
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/spot_refreshlayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            </android.support.v7.widget.RecyclerView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_spot"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    </android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
         </LinearLayout>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-
-</android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

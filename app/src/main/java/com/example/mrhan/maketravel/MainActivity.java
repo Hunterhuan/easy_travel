@@ -15,29 +15,48 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.mrhan.maketravel.Selectcity;
+
+import org.w3c.dom.Text;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle ab;
     private Toolbar toolbar;
     private NavigationView nv;
     private FloatingActionButton fab;
+    private CircleImageView img;
+    private TextView t1,t2;
     public static MyAlgorithm tst;
+    public static UserManager userManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         tst = new MyAlgorithm("上海");
+        userManager = new UserManager();
+
 
         toolbar=(Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         setSupportActionBar(toolbar);
         nv = (NavigationView) findViewById(R.id.nav_view);
         nv.setNavigationItemSelectedListener(this);
+
+        View headerview = nv.getHeaderView(0);
+
+        img = (CircleImageView)headerview.findViewById(R.id.icon_image);
+        t1 = (TextView)headerview.findViewById(R.id.username);
+        t2 = (TextView)headerview.findViewById(R.id.mail);
+
         ab = new ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close);
         mDrawerLayout.addDrawerListener(ab);
         ab.syncState();
@@ -66,11 +85,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 break;
             case R.id.nav_2:
+/*                if(MainActivity.userManager.getState()){
+                    Snackbar.make(mDrawerLayout,"请登陆后再操作！",Snackbar.LENGTH_SHORT).show();
+                    break;
+                }*/
                 Intent intent2 = new Intent(this,person_page.class);
                 startActivity(intent2);
                 break;
             case R.id.nav_3:
-                Snackbar.make(mDrawerLayout,"3",Snackbar.LENGTH_SHORT).show();
+/*                if(MainActivity.userManager.getState()){
+                    Snackbar.make(mDrawerLayout,"请登陆后再操作！",Snackbar.LENGTH_SHORT).show();
+                    break;
+                }*/
+                Intent intent3 = new Intent(this,About.class);
+                startActivity(intent3);
+                Snackbar.make(mDrawerLayout,"关于",Snackbar.LENGTH_SHORT).show();
                 break;
         }
         return true;
@@ -93,5 +122,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return true;
     }
-
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        t1.setText("啦啦啦");
+        t2.setText("ooo");
+    }
 }

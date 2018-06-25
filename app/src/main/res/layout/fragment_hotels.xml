@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.mrhan.maketravel.Fragment.fragment_hotels">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            style="?android:textAppearanceMedium"
+            android:id="@+id/sort_bt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/colorAccent"
+            android:padding="16dp"
+            android:text="排序"
+            android:textColor="#FFF"
+            android:textStyle="bold"/>
+    </LinearLayout>
 
     <!-- TODO: Update blank fragment layout -->
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -23,4 +43,5 @@
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-</android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

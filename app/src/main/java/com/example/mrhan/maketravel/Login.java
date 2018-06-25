@@ -44,7 +44,14 @@ public class Login extends AppCompatActivity {
             public void onClick(View v){
                 String str_user=edit_user.getText().toString();
                 String str_password=edit_password.getText().toString();
-                Snackbar.make(v ,str_user ,Snackbar.LENGTH_SHORT).show();
+                boolean flag = MainActivity.userManager.login(str_user,str_password);
+                if(flag){
+                    Snackbar.make(v ,"登陆成功，即将返回主页" ,Snackbar.LENGTH_SHORT).show();
+                    finish();
+                }
+                else{
+                    Snackbar.make(v ,"用户名密码错误，请重新检查后输入" ,Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
         reg_btn.setOnClickListener(new View.OnClickListener(){
@@ -52,6 +59,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View v){
                 Intent intent = new Intent(Login.this , Registe.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

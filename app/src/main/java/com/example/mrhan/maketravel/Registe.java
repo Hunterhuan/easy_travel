@@ -16,8 +16,7 @@ import java.util.Calendar;
 public class Registe extends AppCompatActivity {
     private Toolbar tb;
     Button reg_btn;
-    EditText reg_user,reg_password;
-
+    EditText reg_user,reg_password,reg_email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +28,8 @@ public class Registe extends AppCompatActivity {
         tb.setTitleTextColor(Color.WHITE);
 
         reg_btn = (Button)findViewById(R.id.registe_btn);
-
         reg_user=(EditText)findViewById(R.id.registe_user);
+        reg_email=(EditText)findViewById(R.id.registe_email);
         reg_password=(EditText)findViewById(R.id.registe_password);
 
         final ActionBar supportActionBar = getSupportActionBar();
@@ -42,7 +41,16 @@ public class Registe extends AppCompatActivity {
             public void onClick(View v){
                 String str_user=reg_user.getText().toString();
                 String str_password=reg_password.getText().toString();
-                Snackbar.make(v ,str_user ,Snackbar.LENGTH_SHORT).show();
+                String str_email=reg_password.getText().toString();
+                boolean flag = MainActivity.userManager.register(str_email,str_password,str_user);
+                if(flag){
+                    MainActivity.userManager.login(str_email,str_password);
+                    Snackbar.make(v ,"注册成功，已经为您自动登陆，即将返回主页" ,Snackbar.LENGTH_SHORT).show();
+                    finish();
+                }
+                else{
+                    Snackbar.make(v ,"注册失败，请重试" ,Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
     }
