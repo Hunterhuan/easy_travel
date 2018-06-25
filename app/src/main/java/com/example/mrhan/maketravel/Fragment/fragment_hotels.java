@@ -57,6 +57,7 @@ public class fragment_hotels extends Fragment implements View.OnClickListener, V
                         .setSingleChoiceItems(sorts, itemSelected, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+
                                 dialogInterface.dismiss();
                             }
                         })
@@ -68,7 +69,6 @@ public class fragment_hotels extends Fragment implements View.OnClickListener, V
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-
                 refreshLayout.finishRefresh(2000);
             }
         });
@@ -90,7 +90,7 @@ public class fragment_hotels extends Fragment implements View.OnClickListener, V
 
         List<String> recommand_hotels = new ArrayList<>();
 
-        List<String> hotels_name= MainActivity.tst.getRecommendHotel("default");
+        List<String> hotels_name= MainActivity.tst.getRecommendHotel(4);
 
         for(String obj : recommand_hotels){
             hotels_name.add(obj);

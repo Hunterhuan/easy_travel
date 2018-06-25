@@ -57,7 +57,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.content.Intent;
 
 import java.io.*;
 
@@ -75,7 +75,12 @@ public class map_path extends Activity implements BaiduMap.OnMapClickListener,
     OverlayManager routeOverlay = null;
     boolean useDefaultIcon = false;
     private TextView popupText = null; // 泡泡view
-    ArrayList<String> Dayroutes = new ArrayList<String>() {{
+
+    ArrayList<String> Dayroutes;
+    /*new ArrayList<String>() {{
+        for(String obj:mappath){
+            add(obj);
+        }
         add("Day1");
         add("上海徐汇瑞峰酒店");
         add("上海城隍庙");
@@ -91,7 +96,7 @@ public class map_path extends Activity implements BaiduMap.OnMapClickListener,
         add("Day3");
         add("上海徐汇瑞峰酒店");
         add("上海野生动物园");
-    }};
+    }};*/
     static int day;
     static int dayoverlay = 0;
     static int theday = 1;
@@ -159,6 +164,7 @@ public class map_path extends Activity implements BaiduMap.OnMapClickListener,
         // 初始化搜索模块，注册事件监听
         mSearch = RoutePlanSearch.newInstance();
         mSearch.setOnGetRoutePlanResultListener(this);
+        Dayroutes = (ArrayList<String>) getIntent().getSerializableExtra("mappath");
     }
 
     /**

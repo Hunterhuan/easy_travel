@@ -3,15 +3,12 @@
     <group>
         <item
             android:id="@+id/nav_login"
-            android:title="login"/>
+            android:title="登陆/注册"/>
         <item
             android:id="@+id/nav_2"
-            android:title="2"/>
+            android:title="我的信息"/>
         <item
             android:id="@+id/nav_3"
-            android:title="3"/>
-        <item
-            android:id="@+id/nav_4"
-            android:title="4"/>
+            android:title="关于"/>
     </group>
 </menu>

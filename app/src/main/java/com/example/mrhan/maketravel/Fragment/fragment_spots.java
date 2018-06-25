@@ -60,8 +60,9 @@ public class fragment_spots extends Fragment implements View.OnClickListener, Vi
     private Map<String,Boolean> map;
     private Button interest_bt, transportation_bt;
     String[] interesting = {"人文","自然"};
-    String[] transportation={"驾车","公交","智能选择"};
     boolean[] checkedItems ={true,true};
+
+    String[] transportation={"驾车","公交","智能选择"};
     int itemSelected = 0;
     //private SwipeRefreshLayout swipeRefresh;
     @Override
@@ -76,8 +77,18 @@ public class fragment_spots extends Fragment implements View.OnClickListener, Vi
             public void onClick(View v){
                 new AlertDialog.Builder(getContext())
                         .setTitle("选择你的景点喜好")
-                        .setMultiChoiceItems(interesting,checkedItems,null)
-                        .setPositiveButton("ok",null)
+                        .setMultiChoiceItems(interesting, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                                checkedItems[i] = b;
+                            }
+                        })
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                MainActivity.tst.addInterest(checkedItems);
+                            }
+                        })
                         .setNegativeButton("cancle",null)
                         .show();
             }
@@ -90,6 +101,8 @@ public class fragment_spots extends Fragment implements View.OnClickListener, Vi
                         .setSingleChoiceItems(transportation, itemSelected, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                MainActivity.tst.setTransportation(i);
+                                itemSelected = i;
                                 dialogInterface.dismiss();
                             }
                         })

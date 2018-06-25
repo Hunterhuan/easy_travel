@@ -37,15 +37,19 @@ public class MyAlgorithm {
     public boolean refresh = true;
     //出行方式
     private String transportation = "taxi";
-    public void setTransportation(String trans)
+    public void setTransportation(int trans)
     {
-        transportation = trans;
+        if(trans == 1)
+            transportation = "bus";
+        else
+            transportation = "taxi";
     }
 
 
     //将一个景点加入已有景点列表
     public void addScene(String ID)
     {
+        if(chosenScene.contains(ID)) return;
         chosenScene.add(ID);
         //对已有景点类型列表修改
         String scene_type = db.getType(ID);
@@ -58,6 +62,7 @@ public class MyAlgorithm {
     //将一个景点从已有景点列表中删除
     public void removeScene(String ID)
     {
+        if(!chosenScene.contains(ID)) return;
         chosenScene.remove(ID);
         //对已有景点类型列表修改
         String scene_type = db.getType(ID);
@@ -68,11 +73,19 @@ public class MyAlgorithm {
     }
 
     //将用户兴趣加入列表
-    public void addInterest(String interest)
+    public void addInterest(boolean[] interest)
     {
-        interests.add(interest);
+        if(interest[0] && !interests.contains("人文"))
+            interests.add("人文");
+        if(interest[1] && !interests.contains("自然"))
+            interests.add("自然");
+        if(!interest[0] && interests.contains("人文"))
+            interests.remove("人文");
+        if(!interest[1] && interests.contains("自然"))
+            interests.remove("自然");
         refresh = true;
     }
+
 
     //将用户兴趣移出列表
     public void removeInterest(String interest)
@@ -216,24 +229,27 @@ public class MyAlgorithm {
         return top_scene;
     }
 
+    Map<String, Double> hotel_to_scene;
     //推荐酒店
-    public List<String> getRecommendHotel(String need)
+    public List<String> getRecommendHotel(int need)
     {
-        List<String> tmp = new ArrayList<String>(db.getAllHotel());
+        //List<String> tmp = new ArrayList<String>(db.getAllHotel());
 
-        /*
-        List<String> res = new ArrayList<String>();
+        List<String> res = new ArrayList<String>(db.getAllHotel());
 
-        System.out.println(tmp);
-
-        //距离景点足够近
-        for(String hotel: tmp)
-            if(isNeighbor(hotel, 500)) //坐taxi 100秒
-                res.add(hotel);
+        if(need == 3 && chosenScene.isEmpty())
+            need = 0;
+    	/*
+    	System.out.println(tmp);
+    	//距离景点足够近
+    	for(String hotel: tmp)
+    		if(isNeighbor(hotel, 500)) //坐taxi 100秒
+    			res.add(hotel);
+    	*/
 
         //排序方式
         //按价格
-        if(need.equals("cheap"))
+        if(need == 1)
         {
             Collections.sort(res, new Comparator<String>() {
                 public int compare(String o1, String o2) {
@@ -241,7 +257,7 @@ public class MyAlgorithm {
                 } } );
         }
         //按评分
-        else if(need.equals("popular"))
+        else if(need == 2)
         {
             Collections.sort(res, new Comparator<String>() {
                 public int compare(String o1, String o2) {
@@ -249,17 +265,36 @@ public class MyAlgorithm {
                 } } );
         }
 
-        //综合
-        else
+        //按距离
+        else if(need == 3)
         {
-            final double price_parameter = 25.0;
+            hotel_to_scene = new HashMap<String, Double>();
+            for(int i=0; i<res.size(); ++i)
+            {
+                hotel_to_scene.put(res.get(i), db.getDistance(res.get(i), chosenScene.get(0), transportation));
+                for(int j=1; j<chosenScene.size(); ++j)
+                {
+                    if(db.getDistance(res.get(i), res.get(j), transportation) < hotel_to_scene.get(res.get(i)))
+                        hotel_to_scene.put(res.get(i),db.getDistance(res.get(i), res.get(j), transportation));
+                }
+            }
             Collections.sort(res, new Comparator<String>() {
                 public int compare(String o1, String o2) {
+                    return (int) (hotel_to_scene.get(o1)-hotel_to_scene.get(o2));
+                } } );
+        }
+
+        //综合
+        else if(need == 0)
+        {
+            Collections.sort(res, new Comparator<String>() {
+                public int compare(String o1, String o2) {
+                    double price_parameter = 25.0;
                     return ((db.getPop(o2)+price_parameter/db.getPrice(o2)>db.getPop(o1)+price_parameter/db.getPrice(o1)?1:-1));
                 } } );
         }
-        */
-        return tmp;
+
+        return res;
     }
 
 
@@ -585,6 +620,15 @@ public class MyAlgorithm {
         finalres.add(formap);
         return finalres;
 
+    }
+    void clearall()
+    {
+        kindNumber = new HashMap<String, Integer>();
+        chosenScene = new ArrayList<String>();
+        interests = new HashSet<String>();
+        refresh = true;
+        transportation = "taxi";
+        the_first = true;
     }
 
 }

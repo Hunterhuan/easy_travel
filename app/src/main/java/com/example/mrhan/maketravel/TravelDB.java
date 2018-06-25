@@ -114,10 +114,10 @@ public class TravelDB {
         Double dist = -1.;
         try {
             if(method.equals("taxi")){
-                dist = distanceInfo.getDouble(3);
+                dist = distanceInfo.getDouble(3) * 3;
             }
             else if(method.equals("bus")){
-                dist = distanceInfo.getDouble(5);
+                dist = distanceInfo.getDouble(5) * 2;
             }
         } catch (JSONException ex){
             ex.printStackTrace();

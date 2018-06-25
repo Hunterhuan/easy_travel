@@ -57,14 +57,9 @@ public class travel_tab extends AppCompatActivity {
             public void onClick(View v){
                 Snackbar.make(v,"floating button work",Snackbar.LENGTH_SHORT).show();
                 List<String> route = MainActivity.tst.getRoute();
-                List<String> route_line = MainActivity.tst.get_route_in_line(route).get(0);
-                ArrayList<String> route2 = new ArrayList<String>();
-                route2.add("预计天数"+route.get(0)+"天              "+"预计花费"+route.get(1)+"元");
-                for(String obj: route_line){
-                    route2.add(obj);
-                }
+                ArrayList<ArrayList<String>> route_line = MainActivity.tst.get_route_in_line(route);
                 Intent intent = new Intent(travel_tab.this , result.class);
-                intent.putStringArrayListExtra("route", route2);
+                intent.putExtra("route", route_line);
                 startActivity(intent);
             }
         });
@@ -88,4 +83,8 @@ public class travel_tab extends AppCompatActivity {
         viewpager.setAdapter(fragmentAdapter);
         tl.setupWithViewPager(viewpager);
     }
-    };
+    protected void onDestroy() {
+        super.onDestroy();
+        MainActivity.tst.clearall();
+    }
+};

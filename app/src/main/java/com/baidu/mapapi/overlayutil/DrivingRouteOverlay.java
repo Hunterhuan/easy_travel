@@ -19,6 +19,7 @@ import com.baidu.mapapi.search.route.DrivingRouteLine.DrivingStep;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 用于显示一条驾车路线的overlay，自3.4.0版本起可实例化多个添加在地图中显示，当数据中包含路况数据时，则默认使用路况纹理分段绘制
@@ -31,7 +32,7 @@ public class DrivingRouteOverlay extends OverlayManager {
 
     /**
      * 构造函数
-     * 
+     *
      * @param baiduMap
      *            该DrivingRouteOvelray引用的 BaiduMap
      */
@@ -50,29 +51,29 @@ public class DrivingRouteOverlay extends OverlayManager {
         // step node
         if (mRouteLine.getAllStep() != null
                 && mRouteLine.getAllStep().size() > 0) {
-            
+
             for (DrivingRouteLine.DrivingStep step : mRouteLine.getAllStep()) {
                 Bundle b = new Bundle();
                 b.putInt("index", mRouteLine.getAllStep().indexOf(step));
                 if (step.getEntrance() != null) {
                     overlayOptionses.add((new MarkerOptions())
                             .position(step.getEntrance().getLocation())
-                                    .anchor(0.5f, 0.5f)
-                                            .zIndex(10)
-                                                    .rotate((360 - step.getDirection()))
-                                                            .extraInfo(b)
-                                                                    .icon(BitmapDescriptorFactory
-                                                                            .fromAssetWithDpi("Icon_line_node.png")));
+                            .anchor(0.5f, 0.5f)
+                            .zIndex(10)
+                            .rotate((360 - step.getDirection()))
+                            .extraInfo(b)
+                            .icon(BitmapDescriptorFactory
+                                    .fromAssetWithDpi("Icon_line_node.png")));
                 }
                 // 最后路段绘制出口点
                 if (mRouteLine.getAllStep().indexOf(step) == (mRouteLine
                         .getAllStep().size() - 1) && step.getExit() != null) {
                     overlayOptionses.add((new MarkerOptions())
                             .position(step.getExit().getLocation())
-                                    .anchor(0.5f, 0.5f)
-                                            .zIndex(10)
-                                                    .icon(BitmapDescriptorFactory
-                                                            .fromAssetWithDpi("Icon_line_node.png")));
+                            .anchor(0.5f, 0.5f)
+                            .zIndex(10)
+                            .icon(BitmapDescriptorFactory
+                                    .fromAssetWithDpi("Icon_line_node.png")));
 
                 }
             }
@@ -81,27 +82,27 @@ public class DrivingRouteOverlay extends OverlayManager {
         if (mRouteLine.getStarting() != null) {
             overlayOptionses.add((new MarkerOptions())
                     .position(mRouteLine.getStarting().getLocation())
-                            .icon(getStartMarker() != null ? getStartMarker() :
-                                    BitmapDescriptorFactory
-                                            .fromAssetWithDpi("Icon_start.png")).zIndex(10));
+                    .icon(getStartMarker() != null ? getStartMarker() :
+                            BitmapDescriptorFactory
+                                    .fromAssetWithDpi("Icon_start.png")).zIndex(10));
         }
         if (mRouteLine.getTerminal() != null) {
             overlayOptionses
                     .add((new MarkerOptions())
                             .position(mRouteLine.getTerminal().getLocation())
-                                    .icon(getTerminalMarker() != null ? getTerminalMarker() :
-                                            BitmapDescriptorFactory
-                                                    .fromAssetWithDpi("Icon_end.png"))
-                                                            .zIndex(10));
+                            .icon(getTerminalMarker() != null ? getTerminalMarker() :
+                                    BitmapDescriptorFactory
+                                            .fromAssetWithDpi("Icon_end.png"))
+                            .zIndex(10));
         }
         // poly line
         if (mRouteLine.getAllStep() != null
                 && mRouteLine.getAllStep().size() > 0) {
-        
+
             List<DrivingStep> steps = mRouteLine.getAllStep();
             int stepNum = steps.size();
-            
-            
+
+
             List<LatLng> points = new ArrayList<LatLng>();
             ArrayList<Integer> traffics = new ArrayList<Integer>();
             int totalTraffic = 0;
@@ -111,7 +112,7 @@ public class DrivingRouteOverlay extends OverlayManager {
                 } else {
                     points.addAll(steps.get(i).getWayPoints().subList(0, steps.get(i).getWayPoints().size() - 1));
                 }
-                
+
                 totalTraffic += steps.get(i).getWayPoints().size() - 1;
                 if (steps.get(i).getTrafficList() != null && steps.get(i).getTrafficList().length > 0) {
                     for (int j = 0;j < steps.get(i).getTrafficList().length;j++) {
@@ -119,7 +120,7 @@ public class DrivingRouteOverlay extends OverlayManager {
                     }
                 }
             }
-            
+
 //            Bundle indexList = new Bundle();
 //            if (traffics.size() > 0) {
 //                int raffic[] = new int[traffics.size()];
@@ -131,13 +132,13 @@ public class DrivingRouteOverlay extends OverlayManager {
 //                indexList.putIntArray("indexs", raffic);
 //            }
             boolean isDotLine = false;
-            
+
             if (traffics != null && traffics.size() > 0) {
                 isDotLine = true;
             }
             PolylineOptions option = new PolylineOptions().points(points).textureIndex(traffics)
                     .width(7).dottedLine(isDotLine).focus(true)
-                        .color(getLineColor() != 0 ? getLineColor() : Color.argb(178, 0, 78, 255)).zIndex(0);
+                    .color(getLineColor() != 0 ? getLineColor() : Color.argb(178, 0, 78, 255)).zIndex(0);
             if (isDotLine) {
                 option.customTextureList(getCustomTextureList());
             }
@@ -148,7 +149,7 @@ public class DrivingRouteOverlay extends OverlayManager {
 
     /**
      * 设置路线数据
-     * 
+     *
      * @param routeLine
      *            路线数据
      */
@@ -158,7 +159,7 @@ public class DrivingRouteOverlay extends OverlayManager {
 
     /**
      * 覆写此方法以改变默认起点图标
-     * 
+     *
      * @return 起点图标
      */
     public BitmapDescriptor getStartMarker() {
@@ -171,15 +172,16 @@ public class DrivingRouteOverlay extends OverlayManager {
      */
     public int getLineColor() {
 
-        switch(theday){
+/*        switch(theday){
 
             case 1:
                 return  Color.argb(178, 255, 0, 255);
 
             case 2:
                 return  Color.argb(178, 0, 255, 255);
-        }
-        return 0;
+        }*/
+        Random random = new Random(theday);
+        return Color.argb(255,random.nextInt(255),random.nextInt(255),random.nextInt(255));
 
     }
     public List<BitmapDescriptor> getCustomTextureList() {
@@ -193,7 +195,7 @@ public class DrivingRouteOverlay extends OverlayManager {
     }
     /**
      * 覆写此方法以改变默认终点图标
-     * 
+     *
      * @return 终点图标
      */
     public BitmapDescriptor getTerminalMarker() {
@@ -202,7 +204,7 @@ public class DrivingRouteOverlay extends OverlayManager {
 
     /**
      * 覆写此方法以改变默认点击处理
-     * 
+     *
      * @param i
      *            线路节点的 index
      * @return 是否处理了该点击事件
