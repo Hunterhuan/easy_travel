@@ -538,13 +538,13 @@ public class MyAlgorithm {
             if(today_time == 0)
             {
                 formap.add("Day"+now_day);
-                if(hotelID.contains(City)) formap.add(hotelID);
+                if(hotelID.startsWith(City)) formap.add(hotelID);
                 else
                 {
                     formap.add(City+hotelID);
                 }
 
-                if(ids.get(j+3).contains(City)) formap.add(hotelID);
+                if(ids.get(j+3).startsWith(City)) formap.add(hotelID);
                 else
                 {
                     formap.add(City+ids.get(j+3));
@@ -572,7 +572,7 @@ public class MyAlgorithm {
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
                 String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
                 if(tmp1<240) {tmp1*=5; trans1="步行";}
-                if(hotelID.contains(City)) formap.add(hotelID);
+                if(hotelID.startsWith(City)) formap.add(hotelID);
                 else
                 {
                     formap.add(City+hotelID);
@@ -584,7 +584,7 @@ public class MyAlgorithm {
                 now_day += 1;
             }
 
-            if(ids.get(j+3).contains(City)) formap.add(hotelID);
+            if(ids.get(j+3).startsWith(City)) formap.add(hotelID);
             else
             {
                 formap.add(City+ids.get(j+3));
@@ -625,7 +625,7 @@ public class MyAlgorithm {
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
                 String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
                 if(tmp1<240) {tmp1*=5; trans1="步行";}
-                if(hotelID.contains(City)) formap.add(hotelID);
+                if(hotelID.startsWith(City)) formap.add(hotelID);
                 else
                 {
                     formap.add(City+hotelID);
