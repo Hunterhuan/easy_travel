@@ -55,7 +55,8 @@
         <activity android:name=".person_page" />
         <activity android:name=".Edit_person_info" />
         <activity android:name=".map_path" />
-        <activity android:name=".About"></activity>
+        <activity android:name=".About" />
+        <activity android:name=".my_route"></activity>
     </application>
 
 </manifest>
