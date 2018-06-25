@@ -181,6 +181,29 @@ public class UserManager {
         }
     }
 
+    public Boolean deleteRoute(String routeId) {
+        if(!valid){
+            return false;
+        }
+        String user_info_url = urlString + "/info";
+        Map<String,String> user_info = new HashMap<>();
+        try {
+            user_info.put("api", "deleteRoute");
+            user_info.put("route_id",routeId);
+            String data = httpUtil.getRequestData(user_info,"utf-8").toString();
+            JSONObject result = httpUtil.HttpPost(user_info_url,data);
+            if(result.getBoolean("Status")) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
     public ArrayList<Route> getRouteList() {
         if(!valid){
             return new ArrayList<>();
