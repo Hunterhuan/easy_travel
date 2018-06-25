@@ -222,12 +222,12 @@ public class UserManager {
                     JSONArray route_jsonarray = routeJson.getJSONArray(i);
                     String route_id = route_jsonarray.getString(0);
                     ArrayList<String> route = new ArrayList<>();
-                    for(int j = 0; j < route_jsonarray.getJSONArray(1).length(); j++){
-                        route.add(route_jsonarray.getJSONArray(1).getString(j));
+                    for(int j = 0; j < route_jsonarray.getJSONArray(2).length(); j++){
+                        route.add(route_jsonarray.getJSONArray(2).getString(j));
                     }
                     ArrayList<String> description = new ArrayList<>();
-                    for(int j = 0; j < route_jsonarray.getJSONArray(2).length(); j++){
-                        description.add(route_jsonarray.getJSONArray(2).getString(j));
+                    for(int j = 0; j < route_jsonarray.getJSONArray(1).length(); j++){
+                        description.add(route_jsonarray.getJSONArray(1).getString(j));
                     }
                     Route route_obj = new Route(route_id,route,description);
                     routeList.add(route_obj);
