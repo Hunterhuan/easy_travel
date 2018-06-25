@@ -22,7 +22,7 @@
             android:id="@+id/registe_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="手机号或邮箱"
+            android:hint="用户名"
             android:maxLines="1"
             android:textColor='#333'
             android:textColorHint='#333'
