@@ -31,7 +31,7 @@ public class UserManager {
     public UserManager() throws MultiUserException {
         if(instances==0){
             valid = true;
-            online = true;
+            online = false;
             httpUtil = new HttpUtil();
             instances += 1;
         }
