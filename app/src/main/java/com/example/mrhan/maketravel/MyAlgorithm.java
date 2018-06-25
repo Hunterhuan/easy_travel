@@ -526,6 +526,7 @@ public class MyAlgorithm {
         //图片流程
         ArrayList<String> formap = new ArrayList<String>(); //暂时没用，为了显示地图可能有用
 
+        res.add(ids.get(0)); res.add(ids.get(1));
         int now_day = 1;
         double today_time = 0.0;
         boolean need_lunch = true;

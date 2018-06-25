@@ -27,10 +27,12 @@ public class result extends AppCompatActivity {
 
         ArrayList<String> route2 = new ArrayList<String>();
         route2.add("预计天数"+route.get(0).get(0)+"天              "+"预计花费"+route.get(0).get(1)+"元");
-        for(String obj: route.get(0)){
+        for(int i=2; i<route.get(0).size(); ++i)
+            route2.add(route.get(0).get(i));
+        /*for(String obj: route.get(0)){
             route2.add(obj);
         }
-
+*/
         List<String> list0 = new ArrayList<>();
         for(String obj:route2){
             list0.add(obj);

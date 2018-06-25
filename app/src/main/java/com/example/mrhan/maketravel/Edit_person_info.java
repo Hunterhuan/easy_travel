@@ -21,7 +21,9 @@ public class Edit_person_info extends AppCompatActivity {
         submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String mail = MainActivity.userManager.getEmail();
                 MainActivity.userManager.changePassword(edit_code.getText().toString());
+                MainActivity.userManager.login(mail,edit_code.getText().toString());
                 Snackbar.make(view,edit_name.getText().toString()+edit_code.getText().toString()+" 修改信息成功",Snackbar.LENGTH_SHORT).show();
                 finish();
             }

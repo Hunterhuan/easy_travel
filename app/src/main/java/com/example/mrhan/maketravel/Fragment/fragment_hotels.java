@@ -20,8 +20,12 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.mrhan.maketravel.Adapter.hotels_Adapter;
+import com.example.mrhan.maketravel.Adapter.test_hotels_adapter;
+import com.example.mrhan.maketravel.Adapter.test_spots_adapter;
 import com.example.mrhan.maketravel.MainActivity;
 import com.example.mrhan.maketravel.MyAlgorithm;
 import com.example.mrhan.maketravel.R;
@@ -41,9 +45,12 @@ public class fragment_hotels extends Fragment implements View.OnClickListener, V
 
     RecyclerView rv;
     RefreshLayout refreshLayout;
+    private test_hotels_adapter mAdapter;
     private Button sort_bt;
+    public boolean decided = false;
     String[] sorts = {"综合","价格","评分","距离"};
     int itemSelected = 0;
+    List<String> hotels_name;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         CoordinatorLayout nestedScrollView = (CoordinatorLayout) inflater.inflate(R.layout.fragment_hotels, container, false);
@@ -57,7 +64,8 @@ public class fragment_hotels extends Fragment implements View.OnClickListener, V
                         .setSingleChoiceItems(sorts, itemSelected, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-
+                                changesort();
+                                itemSelected = i;
                                 dialogInterface.dismiss();
                             }
                         })
@@ -88,18 +96,39 @@ public class fragment_hotels extends Fragment implements View.OnClickListener, V
         super.onActivityCreated(savedInstanceState);
         rv.setLayoutManager(new LinearLayoutManager(rv.getContext()));
 
-        List<String> recommand_hotels = new ArrayList<>();
 
-        List<String> hotels_name= MainActivity.tst.getRecommendHotel(4);
 
-        for(String obj : recommand_hotels){
-            hotels_name.add(obj);
-        }
-        MainActivity.tst.decideHotel("上海徐汇瑞峰酒店");
-        rv.setAdapter(new hotels_Adapter(rv.getContext(),hotels_name));
+        hotels_name= MainActivity.tst.getRecommendHotel(4);
+
+
+        mAdapter = new test_hotels_adapter(R.layout.hotel_cardview, hotels_name);
+        mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+                MainActivity.tst.decideHotel(hotels_name.get(position));
+                //Snackbar.make(view,"选定"+hotels_name.get(position)+"为居住地点",Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(),"您选定了"+hotels_name.get(position)+"为您的居住地点", Toast.LENGTH_SHORT).show();
+                decided = true;
+                return true;
+            }
+        });
+        rv.setAdapter(mAdapter);
+        //MainActivity.tst.decideHotel("上海徐汇瑞峰酒店");
     }
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         return false;
+    }
+
+    private void changesort(){
+        int tmp = mAdapter.getItemCount();
+        for(int i=0;i<tmp;++i){
+            mAdapter.remove(0);
+        }
+        hotels_name= MainActivity.tst.getRecommendHotel(itemSelected);
+        for(String obj:hotels_name){
+            mAdapter.addData(obj);
+        }
+
     }
 }

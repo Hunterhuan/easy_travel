@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.mrhan.maketravel.Adapter.FragmentAdapter;
 import com.example.mrhan.maketravel.Adapter.spots_Adapter;
@@ -27,6 +28,8 @@ public class travel_tab extends AppCompatActivity {
     ViewPager viewpager;
     TabLayout tl;
     FloatingActionButton fab;
+    fragment_hotels fh;
+    fragment_spots fs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +61,17 @@ public class travel_tab extends AppCompatActivity {
                 Snackbar.make(v,"floating button work",Snackbar.LENGTH_SHORT).show();
                 List<String> route = MainActivity.tst.getRoute();
                 ArrayList<ArrayList<String>> route_line = MainActivity.tst.get_route_in_line(route);
-                MainActivity.userManager.saveRoute(route_line);
-                Intent intent = new Intent(travel_tab.this , result.class);
-                intent.putExtra("route", route_line);
-                startActivity(intent);
+                if(MainActivity.userManager.getLoginStatus()){
+                    MainActivity.userManager.saveRoute(route_line);
+                }
+                if(fh.decided==false){
+                    Toast.makeText(v.getContext(),"您还没有选择居住地点，请长按选定！", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Intent intent = new Intent(travel_tab.this , result.class);
+                    intent.putExtra("route", route_line);
+                    startActivity(intent);
+                }
             }
         });
         viewpager= (ViewPager) findViewById(R.id.vp);
@@ -75,8 +85,8 @@ public class travel_tab extends AppCompatActivity {
         tl.addTab(tl.newTab().setText(titles.get(1)));
 
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new fragment_spots());
-        fragments.add(new fragment_hotels());
+        fragments.add(fs = new fragment_spots());
+        fragments.add(fh = new fragment_hotels());
 
         viewpager.setOffscreenPageLimit(0);
 
