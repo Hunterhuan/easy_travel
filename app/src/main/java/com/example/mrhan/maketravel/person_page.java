@@ -24,6 +24,8 @@ public class person_page extends AppCompatActivity {
         ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(person_page.this, my_route.class);
+                startActivity(intent);
                 Snackbar.make(view ,"展示我的所有行程" ,Snackbar.LENGTH_SHORT).show();
             }
         });

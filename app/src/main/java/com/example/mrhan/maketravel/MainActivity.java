@@ -18,6 +18,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.mrhan.maketravel.Selectcity;
 
 import org.w3c.dom.Text;
@@ -70,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
             }
         });
+
+        ImageView bg = findViewById(R.id.bg_main);
+        Glide.with(this).load(R.drawable.bg).apply(new RequestOptions().fitCenter()).into(bg);
     }
     @Override
     public void onConfigurationChanged(Configuration newConfig){
