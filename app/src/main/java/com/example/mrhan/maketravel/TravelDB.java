@@ -25,10 +25,12 @@ public class TravelDB {
     //    private static String urlString = "http://192.168.43.92:8000/api";
     private String CityID;
     private JSONObject cachedData;
+    private HttpUtil httpUtil;
 
     public TravelDB(String cityID){
         CityID = cityID;
         cachedData = new JSONObject();
+        httpUtil = new HttpUtil();
         try {
             cachedData.put("SceneInfoList", new JSONObject());
             cachedData.put("DistanceList", new JSONObject());
@@ -43,7 +45,7 @@ public class TravelDB {
         try{
             sceneList = cachedData.getJSONArray("SceneList");
         } catch (JSONException e){
-            JSONObject response = HttpGet(urlString + "?api=getSceneList&CityID=" + CityID);
+            JSONObject response = httpUtil.HttpGet(urlString + "?api=getSceneList&CityID=" + CityID);
             try {
                 sceneList = response.getJSONArray("SceneList");
                 cachedData.put("SceneList", sceneList);
@@ -66,7 +68,7 @@ public class TravelDB {
         try{
             sceneInfo = cachedData.getJSONObject("SceneInfoList").getJSONArray(sceneId);
         } catch (JSONException e){
-            JSONObject response = HttpGet(urlString+"?api=getSceneInfo&SceneID="+sceneId);
+            JSONObject response = httpUtil.HttpGet(urlString+"?api=getSceneInfo&SceneID="+sceneId);
             try {
                 sceneInfo = response.getJSONArray("SceneInfo");
                 cachedData.getJSONObject("SceneInfoList").put(sceneId, sceneInfo);
@@ -102,7 +104,7 @@ public class TravelDB {
         try{
             distanceInfo = cachedData.getJSONObject("DistanceList").getJSONArray(placeFrom+","+placeTo);
         } catch (JSONException e){
-            JSONObject response = HttpGet(urlString+"?api=getDistance&PlaceFrom="+placeFrom+"&PlaceTo="+placeTo);
+            JSONObject response = httpUtil.HttpGet(urlString+"?api=getDistance&PlaceFrom="+placeFrom+"&PlaceTo="+placeTo);
             try {
                 distanceInfo = response.getJSONArray("Distance");
                 cachedData.getJSONObject("DistanceList").put(placeFrom+","+placeTo, distanceInfo);
@@ -119,9 +121,13 @@ public class TravelDB {
             else if(method.equals("bus")){
                 dist = distanceInfo.getDouble(5) * 2;
             }
+            if(dist < 1.){
+                dist = 1.;
+            }
         } catch (JSONException ex){
             ex.printStackTrace();
         }
+
         return dist;
     }
     public Double getTransportPrice(String placeFrom, String placeTo, String method){
@@ -216,7 +222,7 @@ public class TravelDB {
         try{
             hotelList = cachedData.getJSONArray("HotelList");
         } catch (JSONException e){
-            JSONObject response = HttpGet(urlString + "?api=getHotelList&CityID=" + CityID);
+            JSONObject response = httpUtil.HttpGet(urlString + "?api=getHotelList&CityID=" + CityID);
             try {
                 hotelList = response.getJSONArray("HotelList");
                 cachedData.put("HotelList", hotelList);
@@ -240,7 +246,7 @@ public class TravelDB {
         try{
             hotelInfo = cachedData.getJSONObject("HotelInfoList").getJSONArray(hotelId);
         } catch (JSONException e){
-            JSONObject response = HttpGet(urlString+"?api=getHotelInfo&HotelID="+hotelId);
+            JSONObject response = httpUtil.HttpGet(urlString+"?api=getHotelInfo&HotelID="+hotelId);
             try {
                 hotelInfo = response.getJSONArray("HotelInfo");
                 cachedData.getJSONObject("HotelInfoList").put(hotelId, hotelInfo);
@@ -262,12 +268,26 @@ public class TravelDB {
     public Double getPrice(String ID){
 
         List<String> sceneList = getAllScene();
-        List<String> hotelList = getAllHotel();
         List<String> Info;
         if(sceneList.contains(ID)){
             Info = getSceneInfo(ID);
         }
-        else if(hotelList.contains(ID)){
+        else{
+            return -1.;
+        }
+        Double price = -1.;
+        try {
+            price = Double.parseDouble(Info.get(8));
+        } catch (Exception ex){
+            ;
+        }
+        return price;
+    }
+    public Double getHotelPrice(String ID){
+
+        List<String> hotelList = getAllHotel();
+        List<String> Info;
+        if(hotelList.contains(ID)){
             Info = getHotelInfo(ID);
         }
         else{
@@ -300,65 +320,5 @@ public class TravelDB {
             return false;
         }
     }
-    private JSONObject HttpGet(String urlStr){
-        AsyncTask<String,Integer,JSONObject> task = new AsyncTask<String, Integer, JSONObject>() {
-            @Override
-            protected JSONObject doInBackground(String... strings) {
-                return InnerHttpGet(strings[0]);
-            }
-        };
-        task.execute(urlStr);
-        JSONObject result;
-        try {
-            result = task.get();
-        } catch (Exception ex){
-            result = new JSONObject();
-        }
-        return  result;
-    }
 
-    private JSONObject InnerHttpGet(String urlStr){
-        try {
-            // 创建url资源
-            URL url = new URL(urlStr);
-
-            System.out.println(url.toString());
-
-            // 建立http连接
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            // 设置传递方式
-            conn.setRequestMethod("GET");
-
-            // 开始连接请求
-            conn.connect();
-
-            //System.out.println(conn.getResponseCode());
-
-            // 请求返回的状态
-            if (conn.getResponseCode() == 200) {
-                // 请求返回的数据
-                try {
-                    InputStreamReader in = new InputStreamReader(conn.getInputStream());
-                    BufferedReader bufferedReader = new BufferedReader(in);
-                    StringBuffer stringBuffer = new StringBuffer();
-                    String line = null;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        stringBuffer.append(line);
-                    }
-                    String result = stringBuffer.toString();
-                    return new JSONObject(result);
-                } catch (Exception e1) {
-                    // TODO Auto-generated catch block
-                    ;
-                }
-            } else {
-                ;
-            }
-
-        } catch (Exception e) {
-            //System.out.println(e.toString());
-        }
-        return new JSONObject();
-    }
 }
