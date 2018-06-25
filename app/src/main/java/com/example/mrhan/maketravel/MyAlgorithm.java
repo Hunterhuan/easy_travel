@@ -387,7 +387,7 @@ public class MyAlgorithm {
 
 
     //决定酒店
-    String hotelID;
+    String hotelID = "-1";
     public void decideHotel(String id)
     {
         hotelID = id;
@@ -520,8 +520,10 @@ public class MyAlgorithm {
     //ids 0 总天数， 1 总费用, 2 交通方式 其余各景点Id
     public ArrayList<ArrayList<String>> get_route_in_line(List<String> ids)
     {
-        double lunch_time = 5400;
         ArrayList<ArrayList<String>> finalres= new ArrayList<ArrayList<String>>();
+        if(hotelID == "-1") return finalres;
+        double lunch_time = 5400;
+
         //文字流程
         ArrayList<String>res = new ArrayList<String>();
         //图片流程
@@ -538,17 +540,12 @@ public class MyAlgorithm {
             if(today_time == 0)
             {
                 formap.add("Day"+now_day);
-                if(hotelID.startsWith(City)) formap.add(hotelID);
-                else
-                {
-                    formap.add(City+hotelID);
-                }
+                formap.add(db.getLat(hotelID));
+                formap.add(db.getLng(hotelID));
 
-                if(ids.get(j+3).startsWith(City)) formap.add(hotelID);
-                else
-                {
-                    formap.add(City+ids.get(j+3));
-                }
+                formap.add(db.getLat(ids.get(j+3)));
+                formap.add(db.getLng(ids.get(j+3)));
+
                 res.add("Day"+now_day);
                 double tmp = db.getDistance(hotelID,ids.get(j+3), ids.get(2));
                 String trans = transportation.equals("taxi")?"乘出租车":"乘公交车";
@@ -566,17 +563,14 @@ public class MyAlgorithm {
 
 
             //该天结束
-            if(today_time > 32400) //32400s = 9h = 17:00
+            if(today_time > 32400 || j==chosenScene.size()-1) //32400s = 9h = 17:00
             {
 
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
                 String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
                 if(tmp1<240) {tmp1*=5; trans1="步行";}
-                if(hotelID.startsWith(City)) formap.add(hotelID);
-                else
-                {
-                    formap.add(City+hotelID);
-                }
+                formap.add(db.getLat(hotelID));
+                formap.add(db.getLng(hotelID));
                 res.add("从"+ids.get(j+3)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
                         +get_clock(today_time) + "——" + get_clock(today_time += tmp1));
 
@@ -584,11 +578,8 @@ public class MyAlgorithm {
                 now_day += 1;
             }
 
-            if(ids.get(j+3).startsWith(City)) formap.add(hotelID);
-            else
-            {
-                formap.add(City+ids.get(j+3));
-            }
+            formap.add(db.getLat(ids.get(j+3)));
+            formap.add(db.getLng(ids.get(j+3)));
 
             double tmp = db.getDistance(ids.get(j+2),ids.get(j+3), ids.get(2));
             String trans = transportation.equals("taxi")?"乘出租车":"乘公交车";
@@ -603,6 +594,23 @@ public class MyAlgorithm {
             res.add("从"+ids.get(j+2)+"出发，"+trans+"前往"+ids.get(j+3)+",历时"+get_time_duration(tmp) + "    "
                     +get_clock(today_time) + "——" + get_clock(today_time += tmp));
 
+            //该天结束
+            if(today_time > 32400 || j==chosenScene.size()-1 ) //32400s = 9h = 17:00
+            {
+
+                double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
+                String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
+                if(tmp1<240) {tmp1*=5; trans1="步行";}
+                formap.add(db.getLat(hotelID));
+                formap.add(db.getLng(hotelID));
+                res.add("从"+ids.get(j+3)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
+                        +get_clock(today_time) + "——" + get_clock(today_time += tmp1));
+
+                today_time = 0;
+                now_day += 1;
+            }
+
+
             //检测是否到午饭时间
             if(need_lunch && today_time > 10800 && today_time < 18000) //10800s = 3h = 11:00后吃饭
             {
@@ -611,6 +619,21 @@ public class MyAlgorithm {
             }
             res.add( "游览" + ids.get(j+3) + ",历时"+get_time_duration(db.getVisitTime(ids.get(j+3)))+"    "
                     +get_clock(today_time) + "——" + get_clock(today_time+= db.getVisitTime(ids.get(j+3))));
+            //该天结束
+            if(today_time > 32400 || j==chosenScene.size()-1 ) //32400s = 9h = 17:00
+            {
+
+                double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
+                String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
+                if(tmp1<240) {tmp1*=5; trans1="步行";}
+                formap.add(db.getLat(hotelID));
+                formap.add(db.getLng(hotelID));
+                res.add("从"+ids.get(j+3)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
+                        +get_clock(today_time) + "——" + get_clock(today_time += tmp1));
+
+                today_time = 0;
+                now_day += 1;
+            }
             //检测是否到午饭时间
             if(need_lunch && today_time > 10800 & today_time < 18000) //10800s = 3h = 11:00后吃饭
             {
@@ -619,17 +642,14 @@ public class MyAlgorithm {
             }
 
             //该天结束
-            if(today_time > 32400) //32400s = 9h = 17:00
+            if(today_time > 32400 || j==chosenScene.size()-1 ) //32400s = 9h = 17:00
             {
 
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
                 String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
                 if(tmp1<240) {tmp1*=5; trans1="步行";}
-                if(hotelID.startsWith(City)) formap.add(hotelID);
-                else
-                {
-                    formap.add(City+hotelID);
-                }
+                formap.add(db.getLat(hotelID));
+                formap.add(db.getLng(hotelID));
                 res.add("从"+ids.get(j+3)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
                         +get_clock(today_time) + "——" + get_clock(today_time += tmp1));
 
@@ -651,6 +671,7 @@ public class MyAlgorithm {
         refresh = true;
         transportation = "taxi";
         the_first = true;
+        hotelID = "-1";
     }
 
 }

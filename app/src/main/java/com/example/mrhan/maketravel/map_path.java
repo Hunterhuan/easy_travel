@@ -189,9 +189,13 @@ public class map_path extends Activity implements BaiduMap.OnMapClickListener,
         for (day = 1; day <= dayNum; day ++) {
             List<String> DaySpot = mydays.get(day - 1);
             dayrecord.add(mydays.get(day - 1).size());
-            for (int spotindex = 0; spotindex < mydays.get(day - 1).size() - 1; spotindex++) {
-                PlanNode stNode = PlanNode.withCityNameAndPlaceName("上海", DaySpot.get(spotindex));
-                PlanNode enNode = PlanNode.withCityNameAndPlaceName("上海", DaySpot.get(spotindex + 1));
+            for (int spotindex = 0; spotindex < mydays.get(day - 1).size() / 2 - 1; spotindex++) {
+                //PlanNode stNode = PlanNode.withCityNameAndPlaceName("上海", DaySpot.get(spotindex));
+                LatLng startpos = new LatLng(Double.valueOf(DaySpot.get(2 * spotindex)), Double.valueOf(DaySpot.get(2 * spotindex + 1)));
+                LatLng endpos = new LatLng(Double.valueOf(DaySpot.get(2 * spotindex + 2)), Double.valueOf(DaySpot.get(2 * spotindex + 3)));
+                PlanNode stNode = PlanNode.withLocation(startpos);
+                //PlanNode enNode = PlanNode.withCityNameAndPlaceName("上海", DaySpot.get(spotindex + 1));
+                PlanNode enNode = PlanNode.withLocation(endpos);
 
                 // 实际使用中请对起点终点城市进行正确的设定
 

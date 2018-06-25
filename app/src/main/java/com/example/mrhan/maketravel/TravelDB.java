@@ -119,7 +119,7 @@ public class TravelDB {
                 dist = distanceInfo.getDouble(3) * 3;
             }
             else if(method.equals("bus")){
-                dist = distanceInfo.getDouble(5) * 2;
+                dist = distanceInfo.getDouble(5);
             }
             if(dist < 1.){
                 dist = 1.;
