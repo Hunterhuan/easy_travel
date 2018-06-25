@@ -284,7 +284,6 @@ public class TravelDB {
         return price;
     }
     public Double getHotelPrice(String ID){
-
         List<String> hotelList = getAllHotel();
         List<String> Info;
         if(hotelList.contains(ID)){
@@ -300,6 +299,48 @@ public class TravelDB {
             ;
         }
         return price;
+    }
+    public String getLng(String ID){
+        List<String> sceneList = getAllScene();
+        List<String> hotelList = getAllHotel();
+        List<String> Info;
+        if(sceneList.contains(ID)){
+            Info = getSceneInfo(ID);
+        }
+        else if(hotelList.contains(ID)){
+            Info = getHotelInfo(ID);
+        }
+        else{
+            return "null";
+        }
+        String addr = "null";
+        try {
+            addr = Info.get(3);
+        } catch (Exception ex){
+            ;
+        }
+        return addr;
+    }
+    public String getLat(String ID){
+        List<String> sceneList = getAllScene();
+        List<String> hotelList = getAllHotel();
+        List<String> Info;
+        if(sceneList.contains(ID)){
+            Info = getSceneInfo(ID);
+        }
+        else if(hotelList.contains(ID)){
+            Info = getHotelInfo(ID);
+        }
+        else{
+            return "null";
+        }
+        String addr = "null";
+        try {
+            addr = Info.get(2);
+        } catch (Exception ex){
+            ;
+        }
+        return addr;
     }
     public Double getVisitTime(String sceneId){
         List<String> sceneInfo = getSceneInfo(sceneId);
