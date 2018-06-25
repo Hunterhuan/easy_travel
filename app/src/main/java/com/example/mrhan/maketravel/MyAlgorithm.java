@@ -15,13 +15,14 @@ public class MyAlgorithm {
 
     public MyAlgorithm(String city)
     {
+        City = city;
         db = new TravelDB(city);
         all_scene = db.getAllScene();
     }
 
     //数据库类
     public TravelDB db;
-
+    public  String City;
     //储存所有景点ID
     private List<String> all_scene;
     //储存已有各个类型景点数目
@@ -253,7 +254,7 @@ public class MyAlgorithm {
         {
             Collections.sort(res, new Comparator<String>() {
                 public int compare(String o1, String o2) {
-                    return (int) (db.getPrice(o2)-db.getPrice(o1));
+                    return (int) (db.getHotelPrice(o2)-db.getHotelPrice(o1));
                 } } );
         }
         //按评分
@@ -290,7 +291,7 @@ public class MyAlgorithm {
             Collections.sort(res, new Comparator<String>() {
                 public int compare(String o1, String o2) {
                     double price_parameter = 25.0;
-                    return ((db.getPop(o2)+price_parameter/db.getPrice(o2)>db.getPop(o1)+price_parameter/db.getPrice(o1)?1:-1));
+                    return ((db.getPop(o2)+price_parameter/db.getHotelPrice(o2)>db.getPop(o1)+price_parameter/db.getHotelPrice(o1)?1:-1));
                 } } );
         }
 
@@ -397,7 +398,7 @@ public class MyAlgorithm {
     {
 
         //总花销
-        double cost = db.getPrice(hotelID);
+        double cost = db.getHotelPrice(hotelID);
         //储存最优排序
         int []best_choice = new int[chosenScene.size()];
         double best_time = 100000.0;
@@ -537,9 +538,17 @@ public class MyAlgorithm {
             if(today_time == 0)
             {
                 formap.add("Day"+now_day);
-                formap.add(hotelID);
-                formap.add(ids.get(j+3));
+                if(hotelID.contains(City)) formap.add(hotelID);
+                else
+                {
+                    formap.add(City+hotelID);
+                }
 
+                if(ids.get(j+3).contains(City)) formap.add(hotelID);
+                else
+                {
+                    formap.add(City+ids.get(j+3));
+                }
                 res.add("Day"+now_day);
                 double tmp = db.getDistance(hotelID,ids.get(j+3), ids.get(2));
                 String trans = transportation.equals("taxi")?"乘出租车":"乘公交车";
@@ -563,7 +572,11 @@ public class MyAlgorithm {
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
                 String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
                 if(tmp1<240) {tmp1*=5; trans1="步行";}
-                formap.add(hotelID);
+                if(hotelID.contains(City)) formap.add(hotelID);
+                else
+                {
+                    formap.add(City+hotelID);
+                }
                 res.add("从"+ids.get(j+3)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
                         +get_clock(today_time) + "——" + get_clock(today_time += tmp1));
 
@@ -571,7 +584,11 @@ public class MyAlgorithm {
                 now_day += 1;
             }
 
-            formap.add(ids.get(j+3));
+            if(ids.get(j+3).contains(City)) formap.add(hotelID);
+            else
+            {
+                formap.add(City+ids.get(j+3));
+            }
 
             double tmp = db.getDistance(ids.get(j+2),ids.get(j+3), ids.get(2));
             String trans = transportation.equals("taxi")?"乘出租车":"乘公交车";
@@ -608,7 +625,11 @@ public class MyAlgorithm {
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
                 String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
                 if(tmp1<240) {tmp1*=5; trans1="步行";}
-                formap.add(hotelID);
+                if(hotelID.contains(City)) formap.add(hotelID);
+                else
+                {
+                    formap.add(City+hotelID);
+                }
                 res.add("从"+ids.get(j+3)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
                         +get_clock(today_time) + "——" + get_clock(today_time += tmp1));
 
