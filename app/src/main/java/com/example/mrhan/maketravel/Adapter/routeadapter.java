@@ -8,9 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mrhan.maketravel.MainActivity;
 import com.example.mrhan.maketravel.R;
+import com.example.mrhan.maketravel.Route;
 import com.example.mrhan.maketravel.SelectDate;
+import com.example.mrhan.maketravel.result;
+import com.example.mrhan.maketravel.travel_tab;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,9 +25,9 @@ import java.util.List;
 
 public class routeadapter extends RecyclerView.Adapter<routeadapter.MyHolder>{
     private LayoutInflater li;
-    private List<String> citys= Collections.emptyList();
-    public routeadapter(Context context, List<String> citylist){
-        citys = citylist;
+    private ArrayList<Route> route_list;
+    public routeadapter(Context context, ArrayList<Route> citylist){
+        route_list = citylist;
         li = LayoutInflater.from(context);
     }
     @Override
@@ -33,12 +38,19 @@ public class routeadapter extends RecyclerView.Adapter<routeadapter.MyHolder>{
             @Override
             public void onClick(View v){
                 int position = myHolder.getAdapterPosition();
-                removeData(position);
-/*                String tmp = citys.get(position);
-                Intent intent = new Intent(v.getContext(), SelectDate.class);
-                intent.putExtra("cityname",tmp);
-                v.getContext().startActivity(intent);*/
+                ArrayList<ArrayList<String>> tmp = route_list.get(position).getList();
+                Intent intent = new Intent(v.getContext() , result.class);
+                intent.putExtra("route", tmp);
+                v.getContext().startActivity(intent);
                 //Toast.makeText(v.getContext(),"you click view "+tmp,Toast.LENGTH_SHORT).show();
+            }
+        });
+        myHolder.cityview.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                int position = myHolder.getAdapterPosition();
+                removeData(position);
+                return true;
             }
         });
         return myHolder;
@@ -46,12 +58,12 @@ public class routeadapter extends RecyclerView.Adapter<routeadapter.MyHolder>{
 
     @Override
     public void onBindViewHolder(MyHolder myHolder, int position){
-        String p=citys.get(position);
+        String p=route_list.get(position).getRouteId();
         myHolder.city.setText(p);
     }
     @Override
     public int getItemCount(){
-        return citys.size();
+        return route_list.size();
     }
     class MyHolder extends RecyclerView.ViewHolder{
         TextView city;
@@ -64,7 +76,8 @@ public class routeadapter extends RecyclerView.Adapter<routeadapter.MyHolder>{
         }
     }
     public void removeData(int position){
-        citys.remove(position);
+        MainActivity.userManager.deleteRoute(route_list.get(position).getRouteId());
+        route_list.remove(position);
         notifyItemChanged(position);
         notifyDataSetChanged();
     }

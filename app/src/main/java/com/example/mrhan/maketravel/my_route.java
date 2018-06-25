@@ -26,6 +26,7 @@ import java.util.List;
 public class my_route extends AppCompatActivity {
     private RecyclerView rv;
     private routeadapter ra;
+    private ArrayList<Route> myroute;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +34,12 @@ public class my_route extends AppCompatActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         rv = (RecyclerView)findViewById(R.id.recycler_my_route);
-
-        List<String> city_name= new ArrayList<>();
+        myroute = MainActivity.userManager.getRouteList();
+/*        List<String> city_name= new ArrayList<>();
         city_name.add("上海");
         city_name.add("北京");
-        city_name.add("昆明");
-        ra = new routeadapter(this,city_name);
+        city_name.add("昆明");*/
+        ra = new routeadapter(this,myroute);
         rv.setAdapter(ra);
         rv.setLayoutManager(new LinearLayoutManager(this));
 

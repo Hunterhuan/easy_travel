@@ -15,15 +15,17 @@ public class Edit_person_info extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_person_info);
+        edit_name = (EditText)findViewById(R.id.edit_nickname);
+        edit_code = (EditText)findViewById(R.id.edit_code);
         submit_btn = (Button) findViewById(R.id.change_info_btn);
         submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                MainActivity.userManager.changePassword(edit_code.getText().toString());
                 Snackbar.make(view,edit_name.getText().toString()+edit_code.getText().toString()+" 修改信息成功",Snackbar.LENGTH_SHORT).show();
+                finish();
             }
         });
-        edit_name = (EditText)findViewById(R.id.edit_nickname);
-        edit_code = (EditText)findViewById(R.id.edit_code);
+
     }
 }

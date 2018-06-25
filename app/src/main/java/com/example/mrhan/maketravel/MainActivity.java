@@ -91,18 +91,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
                 break;
             case R.id.nav_2:
-/*                if(MainActivity.userManager.getState()){
-                    Snackbar.make(mDrawerLayout,"请登陆后再操作！",Snackbar.LENGTH_SHORT).show();
+                if(userManager.getLoginStatus()==false){
+                    Snackbar.make(mDrawerLayout,"请登陆后再进行操作！",Snackbar.LENGTH_SHORT).show();
                     break;
-                }*/
+                }
                 Intent intent2 = new Intent(this,person_page.class);
                 startActivity(intent2);
                 break;
             case R.id.nav_3:
-/*                if(MainActivity.userManager.getState()){
-                    Snackbar.make(mDrawerLayout,"请登陆后再操作！",Snackbar.LENGTH_SHORT).show();
+                if(userManager.getLoginStatus()==false){
+                    Snackbar.make(mDrawerLayout,"请登陆后再进行操作！",Snackbar.LENGTH_SHORT).show();
                     break;
-                }*/
+                }
                 Intent intent3 = new Intent(this,About.class);
                 startActivity(intent3);
                 Snackbar.make(mDrawerLayout,"关于",Snackbar.LENGTH_SHORT).show();
@@ -131,7 +131,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onRestart(){
         super.onRestart();
-        t1.setText("啦啦啦");
-        t2.setText("ooo");
+        if(userManager.getLoginStatus()==false)
+        {
+            t1.setText("未登录");
+            t2.setText("未登录");
+        }
+        else{
+            t1.setText(userManager.getUsername());
+            t2.setText(userManager.getEmail());
+        }
     }
 }

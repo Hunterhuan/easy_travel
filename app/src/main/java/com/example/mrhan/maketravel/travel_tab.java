@@ -58,6 +58,7 @@ public class travel_tab extends AppCompatActivity {
                 Snackbar.make(v,"floating button work",Snackbar.LENGTH_SHORT).show();
                 List<String> route = MainActivity.tst.getRoute();
                 ArrayList<ArrayList<String>> route_line = MainActivity.tst.get_route_in_line(route);
+                MainActivity.userManager.saveRoute(route_line);
                 Intent intent = new Intent(travel_tab.this , result.class);
                 intent.putExtra("route", route_line);
                 startActivity(intent);
