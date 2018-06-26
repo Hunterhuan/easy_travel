@@ -188,7 +188,7 @@ public class map_path extends Activity implements BaiduMap.OnMapClickListener,
         theday = 1;
         for (day = 1; day <= dayNum; day ++) {
             List<String> DaySpot = mydays.get(day - 1);
-            dayrecord.add(mydays.get(day - 1).size());
+            dayrecord.add(mydays.get(day - 1).size()/2);
             for (int spotindex = 0; spotindex < mydays.get(day - 1).size() / 2 - 1; spotindex++) {
                 //PlanNode stNode = PlanNode.withCityNameAndPlaceName("上海", DaySpot.get(spotindex));
                 LatLng startpos = new LatLng(Double.valueOf(DaySpot.get(2 * spotindex)), Double.valueOf(DaySpot.get(2 * spotindex + 1)));
@@ -495,16 +495,24 @@ public class map_path extends Activity implements BaiduMap.OnMapClickListener,
                     hasShownDialogue = true;
                 }
             } else */
-            if (result.getRouteLines().size() > 0) {
-                // 直接显示
+            if (result.getRouteLines().size() >= 1) {
                 route = result.getRouteLines().get(0);
-                TransitRouteOverlay overlay = new MyTransitRouteOverlay(mBaidumap);
-                mBaidumap.setOnMarkerClickListener(overlay);
+                dayoverlay ++;
+
+                //System.out.println(theday);
+                //System.out.println(day);
+                TransitRouteOverlay overlay = new MyTransitRouteOverlay(mBaidumap, theday);
+                if (dayoverlay == dayrecord.get(theday - 1) - 1){
+                    theday = (theday + 1) % day;
+                    dayoverlay = 0;
+                    if (theday == 0)
+                        theday ++;
+                }
                 routeOverlay = overlay;
+                mBaidumap.setOnMarkerClickListener(overlay);
                 overlay.setData(result.getRouteLines().get(0));
                 overlay.addToMap();
                 overlay.zoomToSpan();
-
             } else {
                 Log.d("route result", "结果数<0");
                 return;
@@ -775,10 +783,12 @@ public class map_path extends Activity implements BaiduMap.OnMapClickListener,
 
     private class MyTransitRouteOverlay extends TransitRouteOverlay {
 
-        public MyTransitRouteOverlay(BaiduMap baiduMap) {
-            super(baiduMap);
+        int theday;
+        public MyTransitRouteOverlay(BaiduMap baiduMap, int day) {
+            super(baiduMap, day);
+            //System.out.println(theday);
+            theday = day;
         }
-
         @Override
         public BitmapDescriptor getStartMarker() {
             if (useDefaultIcon) {

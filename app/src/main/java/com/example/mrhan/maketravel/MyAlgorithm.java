@@ -398,7 +398,7 @@ public class MyAlgorithm {
     {
 
         //总花销
-        double cost = db.getHotelPrice(hotelID);
+        double cost = 0;
         //储存最优排序
         int []best_choice = new int[chosenScene.size()];
         double best_time = 100000.0;
@@ -476,7 +476,7 @@ public class MyAlgorithm {
         }
 
         cost += best_price;
-        cost += best_day * db.getPrice(hotelID);
+        cost += db.getHotelPrice(hotelID)*(best_day+2);
 
         //需要返回行程顺序（包括午餐），总时间，总费用， 若要修改路线实现想法：传入一个数组，分别对应每个景点访问时间时间
         List<String> res = new ArrayList<String>();
@@ -563,7 +563,7 @@ public class MyAlgorithm {
 
 
             //该天结束
-            if(today_time > 32400 || j==chosenScene.size()-1) //32400s = 9h = 17:00
+            if(today_time > 32400 ) //32400s = 9h = 17:00
             {
 
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
@@ -576,6 +576,7 @@ public class MyAlgorithm {
 
                 today_time = 0;
                 now_day += 1;
+                continue;
             }
 
             formap.add(db.getLat(ids.get(j+3)));
@@ -594,22 +595,6 @@ public class MyAlgorithm {
             res.add("从"+ids.get(j+2)+"出发，"+trans+"前往"+ids.get(j+3)+",历时"+get_time_duration(tmp) + "    "
                     +get_clock(today_time) + "——" + get_clock(today_time += tmp));
 
-            //该天结束
-            if(today_time > 32400 || j==chosenScene.size()-1 ) //32400s = 9h = 17:00
-            {
-
-                double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
-                String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
-                if(tmp1<240) {tmp1*=5; trans1="步行";}
-                formap.add(db.getLat(hotelID));
-                formap.add(db.getLng(hotelID));
-                res.add("从"+ids.get(j+3)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
-                        +get_clock(today_time) + "——" + get_clock(today_time += tmp1));
-
-                today_time = 0;
-                now_day += 1;
-            }
-
 
             //检测是否到午饭时间
             if(need_lunch && today_time > 10800 && today_time < 18000) //10800s = 3h = 11:00后吃饭
@@ -620,7 +605,7 @@ public class MyAlgorithm {
             res.add( "游览" + ids.get(j+3) + ",历时"+get_time_duration(db.getVisitTime(ids.get(j+3)))+"    "
                     +get_clock(today_time) + "——" + get_clock(today_time+= db.getVisitTime(ids.get(j+3))));
             //该天结束
-            if(today_time > 32400 || j==chosenScene.size()-1 ) //32400s = 9h = 17:00
+            if(today_time > 32400  ) //32400s = 9h = 17:00
             {
 
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
@@ -633,6 +618,7 @@ public class MyAlgorithm {
 
                 today_time = 0;
                 now_day += 1;
+                continue;
             }
             //检测是否到午饭时间
             if(need_lunch && today_time > 10800 & today_time < 18000) //10800s = 3h = 11:00后吃饭
@@ -642,7 +628,7 @@ public class MyAlgorithm {
             }
 
             //该天结束
-            if(today_time > 32400 || j==chosenScene.size()-1 ) //32400s = 9h = 17:00
+            if(today_time > 32400 ) //32400s = 9h = 17:00
             {
 
                 double tmp1 = db.getDistance(ids.get(j+3),hotelID, ids.get(2));
@@ -655,7 +641,21 @@ public class MyAlgorithm {
 
                 today_time = 0;
                 now_day += 1;
+                continue;
             }
+        }
+
+        if(today_time !=0)
+        {
+            double tmp1 = db.getDistance(ids.get(ids.size()-1),hotelID, ids.get(2));
+            String trans1 = transportation.equals("taxi")?"乘出租车":"乘公交车";
+            if(tmp1<240) {tmp1*=5; trans1="步行";}
+            formap.add(db.getLat(hotelID));
+            formap.add(db.getLng(hotelID));
+            res.add("从"+ids.get(ids.size()-1)+trans1+"返回"+ hotelID +",历时"+get_time_duration(tmp1) + "    "
+                    +get_clock(today_time) + "——" + get_clock(today_time += tmp1));
+
+            today_time = 0;
         }
         res.add("结束本次旅行");
         finalres.add(res);
