@@ -17,22 +17,24 @@ import com.baidu.mapapi.search.route.TransitRouteLine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 用于显示换乘路线的Overlay，自3.4.0版本起可实例化多个添加在地图中显示
-        */
+ */
 public class TransitRouteOverlay extends OverlayManager {
 
     private TransitRouteLine mRouteLine = null;
-
+    private int theday;
     /**
      * 构造函数
-     * 
+     *
      * @param baiduMap
      *            该TransitRouteOverlay引用的 BaiduMap 对象
      */
-    public TransitRouteOverlay(BaiduMap baiduMap) {
+    public TransitRouteOverlay(BaiduMap baiduMap, int day) {
         super(baiduMap);
+        theday = day;
     }
 
     @Override
@@ -46,23 +48,23 @@ public class TransitRouteOverlay extends OverlayManager {
         // step node
         if (mRouteLine.getAllStep() != null
                 && mRouteLine.getAllStep().size() > 0) {
-            
+
             for (TransitRouteLine.TransitStep step : mRouteLine.getAllStep()) {
                 Bundle b = new Bundle();
                 b.putInt("index", mRouteLine.getAllStep().indexOf(step));
                 if (step.getEntrance() != null) {
                     overlayOptionses.add((new MarkerOptions())
                             .position(step.getEntrance().getLocation())
-                                    .anchor(0.5f, 0.5f).zIndex(10).extraInfo(b)
-                                            .icon(getIconForStep(step)));
+                            .anchor(0.5f, 0.5f).zIndex(10).extraInfo(b)
+                            .icon(getIconForStep(step)));
                 }
                 // 最后路段绘制出口点
                 if (mRouteLine.getAllStep().indexOf(step) == (mRouteLine
                         .getAllStep().size() - 1) && step.getExit() != null) {
                     overlayOptionses.add((new MarkerOptions())
                             .position(step.getExit().getLocation())
-                                    .anchor(0.5f, 0.5f).zIndex(10)
-                                            .icon(getIconForStep(step)));
+                            .anchor(0.5f, 0.5f).zIndex(10)
+                            .icon(getIconForStep(step)));
                 }
             }
         }
@@ -70,23 +72,23 @@ public class TransitRouteOverlay extends OverlayManager {
         if (mRouteLine.getStarting() != null) {
             overlayOptionses.add((new MarkerOptions())
                     .position(mRouteLine.getStarting().getLocation())
-                            .icon(getStartMarker() != null ? getStartMarker() :
-                                    BitmapDescriptorFactory
-                                            .fromAssetWithDpi("Icon_start.png")).zIndex(10));
+                    .icon(getStartMarker() != null ? getStartMarker() :
+                            BitmapDescriptorFactory
+                                    .fromAssetWithDpi("Icon_start.png")).zIndex(10));
         }
         if (mRouteLine.getTerminal() != null) {
             overlayOptionses
                     .add((new MarkerOptions())
                             .position(mRouteLine.getTerminal().getLocation())
-                                    .icon(getTerminalMarker() != null ? getTerminalMarker() :
-                                            BitmapDescriptorFactory
-                                                    .fromAssetWithDpi("Icon_end.png"))
-                                                            .zIndex(10));
+                            .icon(getTerminalMarker() != null ? getTerminalMarker() :
+                                    BitmapDescriptorFactory
+                                            .fromAssetWithDpi("Icon_end.png"))
+                            .zIndex(10));
         }
         // polyline
         if (mRouteLine.getAllStep() != null
                 && mRouteLine.getAllStep().size() > 0) {
-            
+
             for (TransitRouteLine.TransitStep step : mRouteLine.getAllStep()) {
                 if (step.getWayPoints() == null) {
                     continue;
@@ -122,7 +124,7 @@ public class TransitRouteOverlay extends OverlayManager {
 
     /**
      * 设置路线数据
-     * 
+     *
      * @param routeOverlay
      *            路线数据
      */
@@ -132,7 +134,7 @@ public class TransitRouteOverlay extends OverlayManager {
 
     /**
      * 覆写此方法以改变默认起点图标
-     * 
+     *
      * @return 起点图标
      */
     public BitmapDescriptor getStartMarker() {
@@ -141,7 +143,7 @@ public class TransitRouteOverlay extends OverlayManager {
 
     /**
      * 覆写此方法以改变默认终点图标
-     * 
+     *
      * @return 终点图标
      */
     public BitmapDescriptor getTerminalMarker() {
@@ -149,11 +151,22 @@ public class TransitRouteOverlay extends OverlayManager {
     }
 
     public int getLineColor() {
-        return 0;
+
+/*        switch(theday){
+
+            case 1:
+                return  Color.argb(178, 255, 0, 255);
+
+            case 2:
+                return  Color.argb(178, 0, 255, 255);
+        }*/
+        Random random = new Random(theday);
+        return Color.argb(255,random.nextInt(255),random.nextInt(255),random.nextInt(255));
+
     }
     /**
      * 覆写此方法以改变起默认点击行为
-     * 
+     *
      * @param i
      *            被点击的step在
      *            {@link com.baidu.mapapi.search.route.TransitRouteLine#getAllStep()}
