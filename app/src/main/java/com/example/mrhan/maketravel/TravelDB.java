@@ -151,15 +151,26 @@ public class TravelDB {
         }
         return price;
     }
-    public Double getPop(String sceneId){
-        List<String> sceneInfo = getSceneInfo(sceneId);
-        Double pop = -5.;
+    public Double getPop(String ID){
+        List<String> sceneList = getAllScene();
+        List<String> hotelList = getAllHotel();
+        List<String> Info;
+        if(sceneList.contains(ID)){
+            Info = getSceneInfo(ID);
+        }
+        else if(hotelList.contains(ID)){
+            Info = getHotelInfo(ID);
+        }
+        else{
+            return -0.5;
+        }
+        Double pop = -0.5;
         try {
-            pop = Double.parseDouble(sceneInfo.get(6));
+            pop = Double.parseDouble(Info.get(6));
         } catch (Exception ex){
             ;
         }
-        return pop/5;
+        return pop/5.;
     }
     public String getIntro(String sceneId){
         List<String> sceneInfo = getSceneInfo(sceneId);
