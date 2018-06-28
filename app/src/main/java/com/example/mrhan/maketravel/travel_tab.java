@@ -64,7 +64,7 @@ public class travel_tab extends AppCompatActivity {
                 if(MainActivity.userManager.getLoginStatus()){
                     MainActivity.userManager.saveRoute(route_line);
                 }
-                if(fh.decided==false){
+                if(route_line.size()==0){
                     Toast.makeText(v.getContext(),"您还没有选择居住地点，请长按选定！", Toast.LENGTH_SHORT).show();
                 }
                 else{

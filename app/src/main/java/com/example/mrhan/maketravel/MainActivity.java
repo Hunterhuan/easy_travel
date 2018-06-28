@@ -99,10 +99,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent2);
                 break;
             case R.id.nav_3:
-                if(userManager.getLoginStatus()==false){
+/*                if(userManager.getLoginStatus()==false){
                     Snackbar.make(mDrawerLayout,"请登陆后再进行操作！",Snackbar.LENGTH_SHORT).show();
                     break;
-                }
+                }*/
                 Intent intent3 = new Intent(this,About.class);
                 startActivity(intent3);
                 Snackbar.make(mDrawerLayout,"关于",Snackbar.LENGTH_SHORT).show();
